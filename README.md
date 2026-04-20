@@ -2,6 +2,10 @@
 
 BLÜK es el proyecto base del TFG/Proyecto Final de DAW: una tienda online académica desarrollada con Laravel 11, Blade, MySQL, Docker y Laravel Sail.
 
+## Arquitectura MVC
+
+La aplicación sigue el patrón Modelo Vista Controlador (MVC) propio de Laravel. El alcance funcional del proyecto se define como un MVP académico, pero la estructura técnica se organiza en modelo, vista y controlador.
+
 ## MVP cerrado
 
 ### Sí entra

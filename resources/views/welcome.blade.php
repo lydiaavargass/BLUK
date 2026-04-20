@@ -46,7 +46,7 @@
                                 BLÜK, tienda online académica preparada para arrancar sobre Laravel 11.
                             </h1>
                             <p class="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
-                                Este home provisional deja lista la estructura inicial del MVP: autenticación con Breeze, entorno Docker con Sail y una base clara para seguir construyendo catálogo, carrito y pedidos en las próximas semanas.
+                                Este home provisional deja lista la base funcional del MVP y arranca sobre la arquitectura MVC de Laravel: autenticación con Breeze, entorno Docker con Sail y una estructura clara para seguir construyendo catálogo, carrito y pedidos en las próximas semanas.
                             </p>
 
                             <div class="mt-8 flex flex-wrap gap-4">
