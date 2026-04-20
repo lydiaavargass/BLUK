@@ -19,9 +19,7 @@ class Product extends Model
     ];
 
     /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
+     * Casting de atributos.
      */
     protected function casts(): array
     {

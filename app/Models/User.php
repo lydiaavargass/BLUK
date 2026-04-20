@@ -16,9 +16,7 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
+     * Atributos que se pueden asignar de forma masiva.
      */
     protected $fillable = [
         'name',
@@ -28,9 +26,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
+     * Atributos que deben ocultarse para la serialización.
      */
     protected $hidden = [
         'password',
@@ -38,9 +34,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
+     * Casting de atributos.
      */
     protected function casts(): array
     {
