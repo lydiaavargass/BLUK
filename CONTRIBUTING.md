@@ -22,6 +22,8 @@
 
 ## Commits
 
+**REGLA OBLIGATORIA:** Todos los mensajes de commit DEBEN escribirse en **ESPAÑOL**.
+
 Usar commits cortos y claros con prefijos como:
 
 - `feat:`

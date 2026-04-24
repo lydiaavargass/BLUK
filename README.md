@@ -50,6 +50,7 @@ docker compose exec laravel.test npm install
 
 ## Convención de commits
 
+**REGLA OBLIGATORIA:** Todos los mensajes de commit DEBEN escribirse en **ESPAÑOL**.
 - `feat:` nueva funcionalidad
 - `fix:` corrección de error
 - `docs:` cambios de documentación
