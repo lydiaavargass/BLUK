@@ -1,93 +1,94 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+@extends('layouts.store')
 
-        <title>{{ config('app.name', 'BLÜK') }}</title>
+@section('title', 'Bienvenido a BLÜK')
 
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700&display=swap" rel="stylesheet" />
-
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body class="bg-slate-950 font-sans text-slate-100 antialiased">
-        <div class="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
-            <header class="border-b border-white/10">
-                <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
-                    <a href="{{ route('home') }}" class="text-xl font-bold tracking-[0.3em] text-white">BLÜK</a>
-
-                    <nav class="flex items-center gap-3 text-sm font-medium">
-                        @auth
-                            <a href="{{ route('dashboard') }}" class="rounded-full border border-cyan-400/40 px-4 py-2 text-cyan-200 transition hover:border-cyan-300 hover:text-white">
-                                Mi panel
+@section('content')
+<div class="relative bg-white overflow-hidden">
+    <div class="max-w-7xl mx-auto">
+        <div class="relative z-10 pb-8 bg-white sm:pb-16 md:pb-20 lg:max-w-2xl lg:w-full lg:pb-28 xl:pb-32">
+            <main class="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
+                <div class="sm:text-center lg:text-left">
+                    <h1 class="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
+                        <span class="block xl:inline">Bienvenidos a</span>
+                        <span class="block text-indigo-600 xl:inline">BLÜK</span>
+                    </h1>
+                    <p class="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
+                        Tu tienda online de moda urbana y streetwear. Este es el proyecto final para el ciclo de DAW, desarrollado por Lydia y Xavi.
+                    </p>
+                    <div class="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
+                        <div class="rounded-md shadow">
+                            <a href="{{ route('products.index') }}" class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10">
+                                Ver Catálogo
                             </a>
-                        @else
-                            <a href="{{ route('login') }}" class="rounded-full px-4 py-2 text-slate-200 transition hover:bg-white/5 hover:text-white">
-                                Iniciar sesión
-                            </a>
-
-                            @if (Route::has('register'))
-                                <a href="{{ route('register') }}" class="rounded-full bg-cyan-400 px-4 py-2 font-semibold text-slate-950 transition hover:bg-cyan-300">
-                                    Crear cuenta
-                                </a>
-                            @endif
-                        @endauth
-                    </nav>
-                </div>
-            </header>
-
-            <main>
-                <section class="mx-auto max-w-6xl px-6 py-16 md:py-24">
-                    <div class="grid gap-10 lg:grid-cols-[1.3fr_0.7fr] lg:items-center">
-                        <div>
-                            <p class="mb-4 text-sm font-semibold uppercase tracking-[0.35em] text-cyan-300">Semana 1 · Base lista</p>
-                            <h1 class="max-w-3xl text-4xl font-bold leading-tight text-white md:text-6xl">
-                                BLÜK, tienda online académica preparada para arrancar sobre Laravel 11.
-                            </h1>
-                            <p class="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
-                                Este home provisional deja lista la base funcional del MVP y arranca sobre la arquitectura MVC de Laravel: autenticación con Breeze, entorno Docker con Sail y una estructura clara para seguir construyendo catálogo, carrito y pedidos en las próximas semanas.
-                            </p>
-
-                            <div class="mt-8 flex flex-wrap gap-4">
-                                @guest
-                                    <a href="{{ route('register') }}" class="rounded-full bg-cyan-400 px-6 py-3 font-semibold text-slate-950 transition hover:bg-cyan-300">
-                                        Empezar con una cuenta
-                                    </a>
-                                    <a href="{{ route('login') }}" class="rounded-full border border-white/15 px-6 py-3 font-semibold text-white transition hover:bg-white/5">
-                                        Ya tengo cuenta
-                                    </a>
-                                @else
-                                    <a href="{{ route('dashboard') }}" class="rounded-full bg-cyan-400 px-6 py-3 font-semibold text-slate-950 transition hover:bg-cyan-300">
-                                        Ir al panel
-                                    </a>
-                                @endguest
-                            </div>
                         </div>
-
-                        <div class="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-2xl shadow-cyan-950/20">
-                            <p class="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-300">Estado actual</p>
-
-                            <div class="mt-6 space-y-4">
-                                <div class="rounded-2xl border border-white/10 bg-slate-900/80 p-4">
-                                    <h2 class="font-semibold text-white">Autenticación</h2>
-                                    <p class="mt-2 text-sm text-slate-300">Login, registro y logout disponibles con Laravel Breeze en stack Blade.</p>
-                                </div>
-
-                                <div class="rounded-2xl border border-white/10 bg-slate-900/80 p-4">
-                                    <h2 class="font-semibold text-white">Entorno</h2>
-                                    <p class="mt-2 text-sm text-slate-300">Laravel Sail configurado con MySQL para el arranque estándar del proyecto.</p>
-                                </div>
-
-                                <div class="rounded-2xl border border-white/10 bg-slate-900/80 p-4">
-                                    <h2 class="font-semibold text-white">Siguiente foco</h2>
-                                    <p class="mt-2 text-sm text-slate-300">Semana 2 podrá continuar con catálogo y estructura de datos sin rehacer la base.</p>
-                                </div>
-                            </div>
+                        <div class="mt-3 sm:mt-0 sm:ml-3">
+                            <a href="{{ route('login') }}" class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 md:py-4 md:text-lg md:px-10">
+                                Iniciar Sesión
+                            </a>
                         </div>
                     </div>
-                </section>
+                </div>
             </main>
         </div>
-    </body>
-</html>
+    </div>
+    {{-- Imagen de decoración opcional para la derecha --}}
+    <div class="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
+        <div class="h-56 w-full bg-indigo-100 sm:h-72 md:h-96 lg:w-full lg:h-full flex items-center justify-center text-indigo-300">
+            <svg class="h-24 w-24" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+            </svg>
+        </div>
+    </div>
+</div>
+
+<div class="bg-gray-50 py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="lg:text-center">
+            <h2 class="text-base text-indigo-600 font-semibold tracking-wide uppercase">Proyecto Académico</h2>
+            <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+                Funcionalidades del Proyecto
+            </p>
+        </div>
+
+        <div class="mt-10">
+            <dl class="space-y-10 md:space-y-0 md:grid md:grid-cols-2 md:gap-x-8 md:gap-y-10">
+                <div class="relative">
+                    <dt>
+                        <p class="ml-16 text-lg leading-6 font-medium text-gray-900">Catálogo Público</p>
+                    </dt>
+                    <dd class="mt-2 ml-16 text-base text-gray-500">
+                        Visualización de productos y filtrado por categorías de forma abierta.
+                    </dd>
+                </div>
+
+                <div class="relative">
+                    <dt>
+                        <p class="ml-16 text-lg leading-6 font-medium text-gray-900">Autenticación</p>
+                    </dt>
+                    <dd class="mt-2 ml-16 text-base text-gray-500">
+                        Sistema de usuarios gestionado con Laravel Breeze.
+                    </dd>
+                </div>
+
+                <div class="relative">
+                    <dt>
+                        <p class="ml-16 text-lg leading-6 font-medium text-gray-900">Carrito y Pedidos</p>
+                    </dt>
+                    <dd class="mt-2 ml-16 text-base text-gray-500">
+                        Gestión de compra y almacenamiento de historial de pedidos.
+                    </dd>
+                </div>
+
+                <div class="relative">
+                    <dt>
+                        <p class="ml-16 text-lg leading-6 font-medium text-gray-900">Panel de Administración</p>
+                    </dt>
+                    <dd class="mt-2 ml-16 text-base text-gray-500">
+                        Control total sobre productos, stock y estados de pedidos.
+                    </dd>
+                </div>
+            </dl>
+        </div>
+    </div>
+</div>
+@endsection

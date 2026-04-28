@@ -1,9 +1,14 @@
 <?php
 
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome')->name('home');
+
+// Catálogo público (accesible sin autenticación)
+Route::get('/catalogo', [ProductController::class, 'index'])->name('products.index');
+Route::get('/catalogo/{product}', [ProductController::class, 'show'])->name('products.show');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
