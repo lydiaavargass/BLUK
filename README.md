@@ -42,6 +42,13 @@ docker compose exec laravel.test php artisan migrate
 docker compose exec laravel.test npm install
 ```
 
+## Usuarios de prueba
+
+Para las pruebas y la defensa, se han configurado los siguientes usuarios (contraseña común: `password`):
+
+- **Administrador**: `admin@bluk.test`
+- **Cliente**: `cliente@bluk.test`
+
 ## Flujo de ramas
 
 - `main`: entregas estables
