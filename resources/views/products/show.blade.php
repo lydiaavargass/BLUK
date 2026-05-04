@@ -12,6 +12,18 @@
             </a>
         </div>
 
+        {{-- Mensajes flash --}}
+        @if(session('success'))
+            <div class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
+                {{ session('success') }}
+            </div>
+        @endif
+        @if(session('error'))
+            <div class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+                {{ session('error') }}
+            </div>
+        @endif
+
         <div class="lg:grid lg:grid-cols-2 lg:gap-x-12">
             {{-- Imagen del producto --}}
             <div class="bg-gray-100 rounded-lg overflow-hidden aspect-square">
@@ -45,9 +57,21 @@
                 </div>
 
                 <div class="mt-10">
-                    <button type="button" class="w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 {{ $product->stock <= 0 ? 'opacity-50 cursor-not-allowed' : '' }}" {{ $product->stock <= 0 ? 'disabled' : '' }}>
-                        Añadir al carrito
-                    </button>
+                    <form action="{{ route('cart.store') }}" method="POST" class="flex items-center gap-4">
+                        @csrf
+                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                        <div class="w-24">
+                            <label for="quantity" class="sr-only">Cantidad</label>
+                            <select id="quantity" name="quantity" class="w-full rounded-md border-gray-300 py-2 text-base text-gray-700 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" {{ $product->stock <= 0 ? 'disabled' : '' }}>
+                                @for($i = 1; $i <= min($product->stock, 10); $i++)
+                                    <option value="{{ $i }}">{{ $i }}</option>
+                                @endfor
+                            </select>
+                        </div>
+                        <button type="submit" class="flex-1 bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 {{ $product->stock <= 0 ? 'opacity-50 cursor-not-allowed' : '' }}" {{ $product->stock <= 0 ? 'disabled' : '' }}>
+                            Añadir al carrito
+                        </button>
+                    </form>
                 </div>
 
                 {{-- Información adicional básica --}}

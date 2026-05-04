@@ -31,6 +31,35 @@
 
             {{-- Grid de productos --}}
             <div class="mt-8 lg:mt-0 lg:col-span-3">
+                {{-- Buscador y Ordenamiento --}}
+                <div class="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <form action="{{ route('products.index') }}" method="GET" class="flex-1 flex gap-2">
+                        @if($currentCategory)
+                            <input type="hidden" name="categoria" value="{{ $currentCategory }}">
+                        @endif
+                        @if($order)
+                            <input type="hidden" name="ordenar" value="{{ $order }}">
+                        @endif
+                        <input type="text" name="buscar" value="{{ $search ?? '' }}" placeholder="Buscar productos..." class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                        <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 text-sm font-medium">Buscar</button>
+                    </form>
+
+                    <form action="{{ route('products.index') }}" method="GET" class="flex items-center gap-2">
+                        @if($currentCategory)
+                            <input type="hidden" name="categoria" value="{{ $currentCategory }}">
+                        @endif
+                        @if($search)
+                            <input type="hidden" name="buscar" value="{{ $search }}">
+                        @endif
+                        <label for="ordenar" class="text-sm font-medium text-gray-700 whitespace-nowrap">Ordenar por:</label>
+                        <select name="ordenar" id="ordenar" onchange="this.form.submit()" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                            <option value="">Relevancia</option>
+                            <option value="precio_asc" {{ ($order ?? '') === 'precio_asc' ? 'selected' : '' }}>Precio: Menor a mayor</option>
+                            <option value="precio_desc" {{ ($order ?? '') === 'precio_desc' ? 'selected' : '' }}>Precio: Mayor a menor</option>
+                        </select>
+                    </form>
+                </div>
+
                 <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
                     @forelse($products as $product)
                         <div class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">

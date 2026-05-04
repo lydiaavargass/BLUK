@@ -24,12 +24,30 @@ class ProductController extends Controller
             });
         }
 
-        $products = $query->latest()->paginate(12);
+        if ($request->filled('buscar')) {
+            $query->where('name', 'like', '%' . $request->buscar . '%');
+        }
+
+        if ($request->filled('ordenar')) {
+            if ($request->ordenar === 'precio_asc') {
+                $query->orderBy('price', 'asc');
+            } elseif ($request->ordenar === 'precio_desc') {
+                $query->orderBy('price', 'desc');
+            } else {
+                $query->latest();
+            }
+        } else {
+            $query->latest();
+        }
+
+        $products = $query->paginate(12)->withQueryString();
 
         return view('products.index', [
             'products' => $products,
             'categories' => $categories,
             'currentCategory' => $request->categoria,
+            'search' => $request->buscar,
+            'order' => $request->ordenar,
         ]);
     }
 
