@@ -80,8 +80,17 @@
                 {{-- Total y acciones --}}
                 <div class="border-t border-gray-200 px-6 py-4 flex justify-between items-center">
                     <span class="text-lg font-bold text-gray-900">Total: {{ number_format($total, 2, ',', '.') }} €</span>
-                    <div class="flex gap-4">
+                    <div class="flex gap-4 items-center">
                         <a href="{{ route('products.index') }}" class="text-indigo-600 hover:text-indigo-900 text-sm font-medium">Seguir comprando</a>
+                        @auth
+                            <a href="{{ route('orders.checkout') }}" class="bg-indigo-600 text-white px-5 py-2.5 rounded-md text-sm font-semibold hover:bg-indigo-700 transition shadow-sm">
+                                Confirmar pedido
+                            </a>
+                        @else
+                            <a href="{{ route('login') }}" class="bg-indigo-600 text-white px-5 py-2.5 rounded-md text-sm font-semibold hover:bg-indigo-700 transition shadow-sm">
+                                Inicia sesión para comprar
+                            </a>
+                        @endauth
                     </div>
                 </div>
             </div>
