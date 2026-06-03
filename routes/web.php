@@ -52,6 +52,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
     Route::resource('productos', App\Http\Controllers\Admin\ProductController::class)->names('products');
     Route::get('/usuarios', [App\Http\Controllers\Admin\UserController::class, 'index'])->name('users.index');
+    Route::resource('pedidos', App\Http\Controllers\Admin\OrderController::class)->only(['index', 'show', 'update'])->names('orders');
 });
 
 require __DIR__.'/auth.php';
