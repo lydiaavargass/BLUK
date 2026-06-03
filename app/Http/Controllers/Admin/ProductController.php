@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\UpdateProductRequest;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\RedirectResponse;
@@ -56,4 +57,49 @@ class ProductController extends Controller
             ->route('admin.products.index')
             ->with('success', 'Producto creado correctamente.');
     }
+
+    /**
+     * Muestra el formulario para editar un producto existente.
+     */
+    public function edit(Product $producto): View
+    {
+        $categories = Category::orderBy('name')->get();
+
+        return view('admin.products.edit', [
+            'product' => $producto,
+            'categories' => $categories,
+        ]);
+    }
+
+    /**
+     * Actualiza un producto existente en la base de datos.
+     */
+    public function update(UpdateProductRequest $request, Product $producto): RedirectResponse
+    {
+        $data = $request->validated();
+
+        // Reemplazar imagen si se sube una nueva
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('products', 'public');
+        }
+
+        $producto->update($data);
+
+        return redirect()
+            ->route('admin.products.index')
+            ->with('success', 'Producto actualizado correctamente.');
+    }
+
+    /**
+     * Desactiva un producto (eliminación lógica).
+     */
+    public function destroy(Product $producto): RedirectResponse
+    {
+        $producto->update(['is_active' => false]);
+
+        return redirect()
+            ->route('admin.products.index')
+            ->with('success', 'Producto desactivado correctamente.');
+    }
 }
+
