@@ -73,21 +73,23 @@
                 <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
                         <div>
-                            <h3 class="text-sm font-semibold text-gray-400 tracking-wider uppercase">Proyecto BLÜK</h3>
-                            <p class="mt-4 text-base text-gray-500">Tienda online de ropa y accesorios. Proyecto final DAW.</p>
+                            <h3 class="text-sm font-semibold text-zinc-400 tracking-wider uppercase">Sobre BLÜK</h3>
+                            <p class="mt-4 text-sm text-zinc-500">Tu marca de ropa urbana y streetwear de diseño exclusivo. Elevá tu estilo cotidiano con drops únicos de stock limitado.</p>
                         </div>
                         <div>
-                            <h3 class="text-sm font-semibold text-gray-400 tracking-wider uppercase">Enlaces</h3>
-                            <ul class="mt-4 space-y-4 text-base text-gray-500">
-                                <li><a href="{{ route('products.index') }}" class="hover:text-gray-900">Ver Productos</a></li>
+                            <h3 class="text-sm font-semibold text-zinc-400 tracking-wider uppercase font-medium">Navegación</h3>
+                            <ul class="mt-4 space-y-2 text-sm text-zinc-500">
+                                <li><a href="{{ route('home') }}" class="hover:text-zinc-900">Inicio</a></li>
+                                <li><a href="{{ route('products.index') }}" class="hover:text-zinc-900">Catálogo</a></li>
+                                <li><a href="{{ route('cart.index') }}" class="hover:text-zinc-900">Mi Carrito</a></li>
                             </ul>
                         </div>
                         <div>
-                            <h3 class="text-sm font-semibold text-gray-400 tracking-wider uppercase">Defensa</h3>
-                            <p class="mt-4 text-base text-gray-500">Trabajo realizado por Lydia y Xavi.</p>
+                            <h3 class="text-sm font-semibold text-zinc-400 tracking-wider uppercase">Soporte</h3>
+                            <p class="mt-4 text-sm text-zinc-500">¿Tenés alguna duda o consulta? Escribinos en nuestra sección de contacto o por nuestras redes sociales.</p>
                         </div>
                     </div>
-                    <div class="mt-8 border-t border-gray-200 pt-8 text-center text-gray-400 text-sm">
+                    <div class="mt-8 border-t border-gray-200 pt-8 text-center text-zinc-400 text-sm">
                         &copy; {{ date('Y') }} BLÜK. Todos los derechos reservados.
                     </div>
                 </div>

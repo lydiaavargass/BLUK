@@ -1,93 +1,118 @@
 @extends('layouts.store')
 
-@section('title', 'Bienvenido a BLÜK')
+@section('title', 'Bienvenidos a BLÜK')
 
 @section('content')
-<div class="relative bg-white overflow-hidden">
-    <div class="max-w-7xl mx-auto">
-        <div class="relative z-10 pb-8 bg-white sm:pb-16 md:pb-20 lg:max-w-2xl lg:w-full lg:pb-28 xl:pb-32">
-            <main class="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
-                <div class="sm:text-center lg:text-left">
-                    <h1 class="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
-                        <span class="block xl:inline">Bienvenidos a</span>
-                        <span class="block text-indigo-600 xl:inline">BLÜK</span>
-                    </h1>
-                    <p class="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
-                        Tu tienda online de moda urbana y streetwear. Este es el proyecto final para el ciclo de DAW, desarrollado por Lydia y Xavi.
-                    </p>
-                    <div class="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
-                        <div class="rounded-md shadow">
-                            <a href="{{ route('products.index') }}" class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10">
-                                Ver Catálogo
-                            </a>
-                        </div>
-                        <div class="mt-3 sm:mt-0 sm:ml-3">
-                            <a href="{{ route('login') }}" class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 md:py-4 md:text-lg md:px-10">
-                                Iniciar Sesión
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </main>
-        </div>
-    </div>
-    {{-- Imagen de decoración opcional para la derecha --}}
-    <div class="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
-        <div class="h-56 w-full bg-indigo-100 sm:h-72 md:h-96 lg:w-full lg:h-full flex items-center justify-center text-indigo-300">
-            <svg class="h-24 w-24" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-            </svg>
+{{-- Hero Section - Estilo minimalista y coherente con el catálogo --}}
+<div class="bg-white border-b border-gray-200 py-16 sm:py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-100 mb-4 tracking-wider uppercase">
+            Surf & Skate Culture
+        </span>
+        
+        <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-gray-900 leading-tight uppercase">
+            Bienvenidos a BLÜK
+        </h1>
+        
+        <p class="mt-4 max-w-xl mx-auto text-base sm:text-lg text-gray-600 font-normal leading-relaxed">
+            Diseños únicos, duraderos y con estilo.
+        </p>
+        
+        <div class="mt-8 flex justify-center">
+            <a href="{{ route('products.index') }}" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-semibold rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 shadow-sm transition duration-150">
+                Ver Catálogo Completo
+            </a>
         </div>
     </div>
 </div>
 
-<div class="bg-gray-50 py-12">
+{{-- Sección: Lo Nuevo --}}
+<div class="bg-gray-50 py-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="lg:text-center">
-            <h2 class="text-base text-indigo-600 font-semibold tracking-wide uppercase">Proyecto Académico</h2>
-            <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-                Funcionalidades del Proyecto
-            </p>
+        <div class="border-b border-gray-200 pb-5 mb-10 flex items-center justify-between">
+            <h2 class="text-2xl font-bold tracking-tight text-gray-900">Lo Nuevo</h2>
+            <a href="{{ route('products.index') }}" class="text-sm font-semibold text-indigo-600 hover:text-indigo-500 transition">Ver todo &rarr;</a>
         </div>
 
-        <div class="mt-10">
-            <dl class="space-y-10 md:space-y-0 md:grid md:grid-cols-2 md:gap-x-8 md:gap-y-10">
-                <div class="relative">
-                    <dt>
-                        <p class="ml-16 text-lg leading-6 font-medium text-gray-900">Catálogo Público</p>
-                    </dt>
-                    <dd class="mt-2 ml-16 text-base text-gray-500">
-                        Visualización de productos y filtrado por categorías de forma abierta.
-                    </dd>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            @forelse ($loNuevo as $product)
+                <div class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden flex flex-col justify-between">
+                    <div>
+                        {{-- Contenedor de Imagen o Fallback idéntico al catálogo --}}
+                        <div class="aspect-square bg-gray-100">
+                            @if($product->image)
+                                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
+                            @else
+                                <div class="w-full h-full flex items-center justify-center text-gray-400 italic">Sin imagen</div>
+                            @endif
+                        </div>
+                        <div class="p-4">
+                            <span class="text-xs font-semibold text-indigo-600 uppercase">{{ $product->category->name ?? 'Producto' }}</span>
+                            <h3 class="text-lg font-bold text-gray-900 mt-1">{{ $product->name }}</h3>
+                            <p class="text-xl font-semibold text-gray-900 mt-2">{{ number_format($product->price, 2, ',', '.') }} €</p>
+                        </div>
+                    </div>
+                    <div class="p-4 pt-0">
+                        <div class="mt-4 border-t border-gray-100 pt-4 flex items-center justify-between">
+                            <span class="text-sm {{ $product->stock > 0 ? 'text-green-600' : 'text-red-600' }}">
+                                {{ $product->stock > 0 ? 'En stock' : 'Agotado' }}
+                            </span>
+                            <a href="{{ route('products.show', $product) }}" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">
+                                Ver detalles &rarr;
+                            </a>
+                        </div>
+                    </div>
                 </div>
+            @empty
+                <div class="col-span-full text-center py-12 text-gray-500 bg-white rounded-lg border border-gray-200 shadow-sm">
+                    No hay productos nuevos disponibles en este momento.
+                </div>
+            @endforelse
+        </div>
+    </div>
+</div>
 
-                <div class="relative">
-                    <dt>
-                        <p class="ml-16 text-lg leading-6 font-medium text-gray-900">Autenticación</p>
-                    </dt>
-                    <dd class="mt-2 ml-16 text-base text-gray-500">
-                        Sistema de usuarios gestionado con Laravel Breeze.
-                    </dd>
-                </div>
+{{-- Sección: Más Vendidos --}}
+<div class="bg-white py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="border-b border-gray-200 pb-5 mb-10">
+            <h2 class="text-2xl font-bold tracking-tight text-gray-900">Más Vendidos</h2>
+        </div>
 
-                <div class="relative">
-                    <dt>
-                        <p class="ml-16 text-lg leading-6 font-medium text-gray-900">Carrito y Pedidos</p>
-                    </dt>
-                    <dd class="mt-2 ml-16 text-base text-gray-500">
-                        Gestión de compra y almacenamiento de historial de pedidos.
-                    </dd>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            @forelse ($masVendidos as $product)
+                <div class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden flex flex-col justify-between">
+                    <div>
+                        {{-- Contenedor de Imagen o Fallback idéntico al catálogo --}}
+                        <div class="aspect-square bg-gray-100">
+                            @if($product->image)
+                                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
+                            @else
+                                <div class="w-full h-full flex items-center justify-center text-gray-400 italic">Sin imagen</div>
+                            @endif
+                        </div>
+                        <div class="p-4">
+                            <span class="text-xs font-semibold text-indigo-600 uppercase">{{ $product->category->name ?? 'Producto' }}</span>
+                            <h3 class="text-lg font-bold text-gray-900 mt-1">{{ $product->name }}</h3>
+                            <p class="text-xl font-semibold text-gray-900 mt-2">{{ number_format($product->price, 2, ',', '.') }} €</p>
+                        </div>
+                    </div>
+                    <div class="p-4 pt-0">
+                        <div class="mt-4 border-t border-gray-100 pt-4 flex items-center justify-between">
+                            <span class="text-sm {{ $product->stock > 0 ? 'text-green-600' : 'text-red-600' }}">
+                                {{ $product->stock > 0 ? 'En stock' : 'Agotado' }}
+                            </span>
+                            <a href="{{ route('products.show', $product) }}" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">
+                                Ver detalles &rarr;
+                            </a>
+                        </div>
+                    </div>
                 </div>
-
-                <div class="relative">
-                    <dt>
-                        <p class="ml-16 text-lg leading-6 font-medium text-gray-900">Panel de Administración</p>
-                    </dt>
-                    <dd class="mt-2 ml-16 text-base text-gray-500">
-                        Control total sobre productos, stock y estados de pedidos.
-                    </dd>
+            @empty
+                <div class="col-span-full text-center py-12 text-gray-500 bg-gray-50 rounded-lg border border-gray-200">
+                    No hay productos destacados disponibles en este momento.
                 </div>
-            </dl>
+            @endforelse
         </div>
     </div>
 </div>

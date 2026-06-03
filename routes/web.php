@@ -6,7 +6,21 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'welcome')->name('home');
+Route::get('/', function () {
+    $loNuevo = \App\Models\Product::with('category')
+        ->where('is_active', true)
+        ->latest()
+        ->take(4)
+        ->get();
+
+    $masVendidos = \App\Models\Product::with('category')
+        ->where('is_active', true)
+        ->orderBy('stock', 'desc')
+        ->take(4)
+        ->get();
+
+    return view('welcome', compact('loNuevo', 'masVendidos'));
+})->name('home');
 
 // Catálogo público (accesible sin autenticación)
 Route::get('/catalogo', [ProductController::class, 'index'])->name('products.index');
