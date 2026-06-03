@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -66,5 +67,57 @@ class AdminProductControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('Camiseta BLÜK Classic');
         $response->assertDontSee('Sneaker Platform'); // Seeder has "Sneaker Platform", should not be shown
+    }
+
+    public function test_admin_can_access_create_product_form(): void
+    {
+        $adminRole = Role::where('name', 'admin')->first();
+        $admin = User::factory()->create([
+            'role_id' => $adminRole->id,
+        ]);
+
+        $response = $this->actingAs($admin)->get(route('admin.products.create'));
+
+        $response->assertStatus(200);
+        $response->assertViewIs('admin.products.create');
+        $response->assertViewHas('categories');
+    }
+
+    public function test_admin_can_store_a_new_product(): void
+    {
+        $adminRole = Role::where('name', 'admin')->first();
+        $admin = User::factory()->create([
+            'role_id' => $adminRole->id,
+        ]);
+
+        $category = Category::first();
+
+        $response = $this->actingAs($admin)->post(route('admin.products.store'), [
+            'name' => 'Producto Test Nuevo',
+            'description' => 'Una descripción de prueba para el producto.',
+            'category_id' => $category->id,
+            'price' => 25.50,
+            'stock' => 10,
+            'is_active' => 1,
+        ]);
+
+        $response->assertRedirect(route('admin.products.index'));
+        $response->assertSessionHas('success');
+        $this->assertDatabaseHas('products', [
+            'name' => 'Producto Test Nuevo',
+            'price' => 25.50,
+        ]);
+    }
+
+    public function test_store_product_fails_with_missing_required_fields(): void
+    {
+        $adminRole = Role::where('name', 'admin')->first();
+        $admin = User::factory()->create([
+            'role_id' => $adminRole->id,
+        ]);
+
+        $response = $this->actingAs($admin)->post(route('admin.products.store'), []);
+
+        $response->assertSessionHasErrors(['name', 'description', 'category_id', 'price', 'stock']);
     }
 }
