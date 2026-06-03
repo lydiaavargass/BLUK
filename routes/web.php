@@ -34,4 +34,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/pedidos/{order}', [OrderController::class, 'show'])->name('orders.show');
 });
 
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+    
+    // Placeholder para evitar que falle el renderizado del layout
+    Route::get('/productos', function () {
+        return 'Listado de productos (próximamente)';
+    })->name('products.index');
+});
+
 require __DIR__.'/auth.php';
