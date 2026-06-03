@@ -26,23 +26,23 @@ class OrderController extends Controller
     /**
      * Vista de detalle de un pedido.
      */
-    public function show(Order $order): View
+    public function show(Order $pedido): View
     {
-        $order->load(['user', 'items.product']);
+        $pedido->load(['user', 'items.product']);
 
-        return view('admin.orders.show', compact('order'));
+        return view('admin.orders.show', ['order' => $pedido]);
     }
 
     /**
      * Actualiza el estado de un pedido y restaura el stock si se cancela.
      */
-    public function update(Request $request, Order $order): RedirectResponse
+    public function update(Request $request, Order $pedido): RedirectResponse
     {
         $request->validate([
             'status' => 'required|in:pendiente,procesando,enviado,cancelado',
         ]);
 
-        $oldStatus = $order->status;
+        $oldStatus = $pedido->status;
         $newStatus = $request->input('status');
 
         if ($newStatus === $oldStatus) {
@@ -53,20 +53,20 @@ class OrderController extends Controller
         try {
             if ($newStatus === 'cancelado' && $oldStatus !== 'cancelado') {
                 // Restaurar stock
-                foreach ($order->items as $item) {
+                foreach ($pedido->items as $item) {
                     if ($item->product) {
                         $item->product->increment('stock', $item->quantity);
                     }
                 }
             }
 
-            $order->update([
+            $pedido->update([
                 'status' => $newStatus,
             ]);
 
             DB::commit();
 
-            return redirect()->route('admin.orders.show', $order)
+            return redirect()->route('admin.orders.show', $pedido)
                 ->with('success', 'El estado del pedido ha sido actualizado correctamente.');
         } catch (\Exception $e) {
             DB::rollBack();
