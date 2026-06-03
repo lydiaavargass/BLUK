@@ -120,4 +120,68 @@ class AdminProductControllerTest extends TestCase
 
         $response->assertSessionHasErrors(['name', 'description', 'category_id', 'price', 'stock']);
     }
+
+    public function test_admin_can_access_edit_product_form(): void
+    {
+        $adminRole = Role::where('name', 'admin')->first();
+        $admin = User::factory()->create([
+            'role_id' => $adminRole->id,
+        ]);
+
+        $product = Product::first();
+
+        $response = $this->actingAs($admin)->get(route('admin.products.edit', $product));
+
+        $response->assertStatus(200);
+        $response->assertViewIs('admin.products.edit');
+        $response->assertViewHas('product');
+        $response->assertViewHas('categories');
+    }
+
+    public function test_admin_can_update_a_product(): void
+    {
+        $adminRole = Role::where('name', 'admin')->first();
+        $admin = User::factory()->create([
+            'role_id' => $adminRole->id,
+        ]);
+
+        $product = Product::first();
+        $category = Category::first();
+
+        $response = $this->actingAs($admin)->put(route('admin.products.update', $product), [
+            'name' => 'Producto Editado',
+            'description' => 'Descripción editada para el test.',
+            'category_id' => $category->id,
+            'price' => 99.99,
+            'stock' => 5,
+            'is_active' => 1,
+        ]);
+
+        $response->assertRedirect(route('admin.products.index'));
+        $response->assertSessionHas('success');
+        $this->assertDatabaseHas('products', [
+            'id' => $product->id,
+            'name' => 'Producto Editado',
+            'price' => 99.99,
+        ]);
+    }
+
+    public function test_admin_can_deactivate_a_product(): void
+    {
+        $adminRole = Role::where('name', 'admin')->first();
+        $admin = User::factory()->create([
+            'role_id' => $adminRole->id,
+        ]);
+
+        $product = Product::where('is_active', true)->first();
+
+        $response = $this->actingAs($admin)->delete(route('admin.products.destroy', $product));
+
+        $response->assertRedirect(route('admin.products.index'));
+        $response->assertSessionHas('success');
+        $this->assertDatabaseHas('products', [
+            'id' => $product->id,
+            'is_active' => false,
+        ]);
+    }
 }
