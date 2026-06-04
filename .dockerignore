@@ -1,0 +1,16 @@
+.git
+.github
+.atl
+node_modules
+vendor
+storage/framework/cache/data/*
+storage/framework/sessions/*
+storage/framework/testing/*
+storage/framework/views/*
+storage/logs/*
+.phpunit.result.cache
+PLAN_DE_PRUEBAS.md
+DEPLOYMENT.md
+docker-compose.yml
+compose.yaml
+docker/
