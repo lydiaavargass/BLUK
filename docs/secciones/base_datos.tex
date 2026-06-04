@@ -1,0 +1,79 @@
+\chapter{Diseño de Base de Datos}
+
+\section{Esquema Entidad-Relación y Tablas}
+La persistencia de datos de \textbf{BLÜK} se organiza mediante una estructura relacional que consta de las siguientes tablas principales:
+
+\subsection{Tabla: \texttt{roles}}
+Almacena los perfiles del sistema para la autorización.
+\begin{itemize}
+    \item \texttt{id} (PK, Auto-incremental)
+    \item \texttt{name} (VARCHAR, Nombre único del rol: `admin` o `cliente`)
+    \item \texttt{created\_at} / \texttt{updated\_at} (Timestamps)
+\end{itemize}
+
+\subsection{Tabla: \texttt{users}}
+Almacena los datos de los usuarios registrados.
+\begin{itemize}
+    \item \texttt{id} (PK, Auto-incremental)
+    \item \texttt{role\_id} (FK referenciando a \texttt{roles.id}, Restricción ON DELETE CASCADE)
+    \item \texttt{name} (VARCHAR, Nombre completo)
+    \item \texttt{email} (VARCHAR, Correo único)
+    \item \texttt{password} (VARCHAR, Hash bcrypt)
+    \item \texttt{created\_at} / \texttt{updated\_at} (Timestamps)
+\end{itemize}
+
+\subsection{Tabla: \texttt{categories}}
+Estructura las categorías del catálogo de moda.
+\begin{itemize}
+    \item \texttt{id} (PK, Auto-incremental)
+    \item \texttt{name} (VARCHAR, Nombre de la categoría)
+    \item \texttt{description} (TEXT, Descripción opcional)
+    \item \texttt{created\_at} / \texttt{updated\_at} (Timestamps)
+\end{itemize}
+
+\subsection{Tabla: \texttt{products}}
+Almacena los artículos disponibles en la tienda.
+\begin{itemize}
+    \item \texttt{id} (PK, Auto-incremental)
+    \item \texttt{category\_id} (FK referenciando a \texttt{categories.id})
+    \item \texttt{name} (VARCHAR, Nombre del artículo)
+    \item \texttt{description} (TEXT, Descripción comercial)
+    \item \texttt{price} (DECIMAL 8,2, Precio unitario de catálogo)
+    \item \texttt{stock} (INTEGER, Cantidad en almacén)
+    \item \texttt{image} (VARCHAR, Ruta de la foto del artículo, nullable)
+    \item \texttt{is\_active} (BOOLEAN, Estado de activación, default \texttt{true})
+    \item \texttt{created\_at} / \texttt{updated\_at} (Timestamps)
+\end{itemize}
+
+\subsection{Tabla: \texttt{carts} y \texttt{cart\_items}}
+Permite la persistencia del carrito de compras.
+\begin{itemize}
+    \item \texttt{carts}: \texttt{id} (PK), \texttt{user\_id} (FK referenciando a \texttt{users.id}, nullable), \texttt{session\_id} (VARCHAR, para invitados, nullable).
+    \item \texttt{cart\_items}: \texttt{id} (PK), \texttt{cart\_id} (FK referenciando a \texttt{carts.id}, ON DELETE CASCADE), \texttt{product\_id} (FK referenciando a \texttt{products.id}), \texttt{quantity} (INTEGER).
+\end{itemize}
+
+\subsection{Tabla: \texttt{orders} y \texttt{order\_items}}
+Consolida la información de las ventas realizadas.
+\begin{itemize}
+    \item \texttt{orders}: \texttt{id} (PK), \texttt{user\_id} (FK referenciando a \texttt{users.id}), \texttt{status} (VARCHAR, estados: `pendiente`, `procesando`, `enviado`, `cancelado`), \texttt{total} (DECIMAL 8,2).
+    \item \texttt{order\_items}: \texttt{id} (PK), \texttt{order\_id} (FK referenciando a \texttt{orders.id}, ON DELETE CASCADE), \texttt{product\_id} (FK referenciando a \texttt{products.id}), \texttt{price} (DECIMAL 8,2, Precio histórico), \texttt{quantity} (INTEGER).
+\end{itemize}
+
+\section{Relaciones y Reglas de Integridad}
+Las relaciones lógicas implementadas garantizan la consistencia:
+\begin{itemize}
+    \item \textbf{roles a users (1:N):} Un rol tiene muchos usuarios. Un usuario pertenece a un solo rol.
+    \item \textbf{categories a products (1:N):} Una categoría tiene muchos productos.
+    \item \textbf{users a orders (1:N):} Un usuario puede realizar múltiples pedidos.
+    \item \textbf{orders a order\_items (1:N):} Un pedido desglosa múltiples líneas de venta. Si se elimina un pedido, sus líneas se borran en cascada.
+    \item \textbf{products a order\_items (1:N):} Un producto puede estar presente en muchas líneas de pedido, manteniendo la integridad de datos histórica.
+\end{itemize}
+    
+\section{Poblado Inicial (Seeders)}
+Creamos scripts de semilla en \texttt{database/seeders/} para rellenar la base de datos con información base inicial:
+\begin{itemize}
+    \item \texttt{RoleSeeder}: Genera los roles `admin` y `cliente`.
+    \item \texttt{CategorySeeder}: Genera las categorías básicas de streetwear (Sudaderas, Camisetas, Pantalones, Accesorios).
+    \item \texttt{ProductSeeder}: Puebla el catálogo con una selección de 10 productos con precios, stock inicial y fotos de muestra.
+    \item \texttt{DatabaseSeeder}: Ejecuta los seeders anteriores y crea una cuenta de administrador de muestra (\texttt{admin@bluk.test}) y un usuario cliente de prueba (\texttt{cliente@bluk.test}).
+\end{itemize}

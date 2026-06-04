@@ -1,0 +1,33 @@
+\chapter{Incidencias, Conclusiones y Mejoras Futuras}
+
+\section{Registro de Incidencias y Resoluciones Técnicas}
+Durante el ciclo de desarrollo y la puesta en producción del proyecto surgieron incidencias técnicas que requirieron análisis y soluciones profesionales:
+
+\subsection{Incidencia 1: Error en build context por node\_modules en Windows}
+\begin{itemize}
+    \item \textbf{Problema:} Al intentar construir la imagen de Docker en Windows, el proceso fallaba devolviendo un error de \texttt{invalid file request} en subdirectorios internos de \texttt{node\_modules} debido a que Docker no puede procesar los enlaces simbólicos creados localmente por npm en sistemas Windows.
+    \item \textbf{Resolución:} Creamos un archivo \texttt{.dockerignore} en la raíz del proyecto para excluir carpetas de dependencias locales pesadas (\texttt{node\_modules}, \texttt{vendor}) y directorios temporales, lo que evitó el error y aceleró notablemente el tiempo de compilación.
+\end{itemize}
+
+\subsection{Incidencia 2: Conflicto de nombres de contenedores en el host}
+\begin{itemize}
+    \item \textbf{Problema:} La compilación de producción fallaba con errores de conflicto indicando que el nombre del contenedor \texttt{bluk\_app} ya estaba en uso por ejecuciones pasadas o de otros proyectos en la máquina del usuario.
+    \item \textbf{Resolución:} Modificamos el nombre del proyecto de Docker Compose a \texttt{bluk\_prod} usando la directiva \texttt{name: bluk\_prod} al principio del archivo YAML y renombramos de forma única cada servicio a \texttt{bluk\_prod\_app}, \texttt{bluk\_prod\_nginx} y \texttt{bluk\_prod\_mysql}.
+\end{itemize}
+
+\subsection{Incidencia 3: Conflictos de permisos de sesión entre entornos}
+\begin{itemize}
+    \item \textbf{Problema:} El entorno de desarrollo local arrojaba excepciones \texttt{Permission denied} en el almacenamiento de sesiones tras haber levantado producción, ya que los archivos compartidos en el volumen local fueron creados bajo el propietario del contenedor productivo (\texttt{www-data}) y el de desarrollo (\texttt{sail}) no tenía privilegios de sobreescritura.
+    \item \textbf{Resolución:} Ejecutamos un comando de cambio de permisos recursivo como root (\texttt{-u root}) en ambos entornos (\texttt{chmod -R 777}) sobre los directorios \texttt{storage} y \texttt{bootstrap/cache}, resolviendo de forma definitiva la interferencia de permisos.
+\end{itemize}
+
+\section{Conclusiones del Proyecto}
+El desarrollo del proyecto \textbf{BLÜK} ha permitido consolidar e integrar de forma práctica los conocimientos de programación, gestión de bases de datos, maquetación y despliegue de aplicaciones web estudiados en el ciclo de DAW. Se logró entregar un e-commerce robusto, modular, responsive y con un flujo transaccional seguro y coherente para la gestión comercial y administrativa.
+
+\section{Mejoras Futuras}
+Como líneas de desarrollo futuro para la evolución de la tienda online se proponen:
+\begin{itemize}
+    \item \textbf{Pasarela de Pagos Real:} Integración del SDK de Stripe para la simulación y cobro real de transacciones bancarias.
+    \item \textbf{Métricas y Estadísticas:} Un panel gráfico interactivo en la zona de administración con analíticas de ventas y gráficos de rendimiento de productos más vendidos.
+    \item \textbf{Notificaciones por Email:} Configuración de colas de trabajos y servicios de correo (Mailgun/SMTP) para enviar correos automáticos de confirmación a los clientes.
+\end{itemize}

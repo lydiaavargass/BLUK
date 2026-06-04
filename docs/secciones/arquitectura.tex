@@ -1,0 +1,28 @@
+\chapter{Arquitectura del Software y Tecnologías}
+
+\section{Arquitectura MVC (Modelo-Vista-Controlador)}
+La aplicación \textbf{BLÜK} ha sido desarrollada adoptando el patrón arquitectónico de diseño de software \textbf{Modelo-Vista-Controlador (MVC)} proporcionado nativamente por el framework Laravel 11. Este patrón nos permite organizar el código de manera limpia separando la interfaz de usuario de la lógica de datos y negocio:
+\begin{itemize}
+    \item \textbf{Modelos (Model):} Representan la lógica de datos y persisten la información haciendo uso de Eloquent ORM. Están ubicados en el directorio \texttt{app/Models/}.
+    \item \textbf{Vistas (View):} Definen la interfaz gráfica que ve el usuario, utilizando el motor de plantillas Blade de Laravel. Se ubican en \texttt{resources/views/}.
+    \item \textbf{Controladores (Controller):} Actúan como intermediarios entre el usuario, el modelo y la vista, procesando las peticiones HTTP (`Requests`) y retornando las respuestas adecuadas (`Responses`). Se ubican en \texttt{app/Http/Controllers/}.
+\end{itemize}
+
+\section{Tecnologías Utilizadas}
+
+\subsection{Lenguaje de Programación Backend: PHP 8.4}
+Utilizamos la versión más moderna y optimizada del lenguaje PHP, permitiéndonos aprovechar las últimas mejoras del motor de ejecución (JIT), tipado estricto en los parámetros y retornos de métodos, y una mayor velocidad de procesamiento.
+
+\subsection{Framework Principal: Laravel 11}
+Laravel 11 actúa como el núcleo del desarrollo, facilitando utilidades esenciales de infraestructura:
+\begin{itemize}
+    \item \textbf{Eloquent ORM:} Mapeo relacional de objetos de base de datos a modelos de clases PHP con protección de consultas mediante parameter binding contra inyección SQL.
+    \item \textbf{Enrutador y Middleware:} Registro de rutas dinámicas de la aplicación y la protección del área administrativa interceptando peticiones.
+    \item \textbf{Laravel Breeze:} Andamiaje inicial para la gestión de autenticación estándar de usuarios (registro, login, perfiles, logout).
+\end{itemize}
+
+\subsection{Desarrollo Frontend: Blade y Tailwind CSS}
+Utilizamos el motor nativo de plantillas **Blade** para construir layouts e integrar componentes interactivos de manera reutilizable. La maquetación y diseño responsive de la aplicación se implementaron con **Tailwind CSS**, aplicando estilos dinámicos de streetwear con una paleta urbana y moderna (tonos azul profundo, coral/naranja y fondos arena calientes).
+
+\subsection{Base de Datos: MySQL 8.4}
+Servidor relacional de base de datos de producción que almacena la información de los usuarios, catálogo de productos, carrito de compras y los pedidos históricos.

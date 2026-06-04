@@ -1,0 +1,52 @@
+\chapter{Plan y Registro de Pruebas}
+
+\section{Introducción y Objetivos de Pruebas}
+El objetivo fundamental del plan de pruebas del sistema fue verificar que todas las funcionalidades y reglas de negocio del e-commerce \textbf{BLÜK} respondan de manera correcta ante diversos escenarios de operación, asegurando tanto la experiencia de usuario como la estabilidad e integridad de la base de datos.
+
+\section{Pruebas Automatizadas (PHPUnit)}
+Desarrollamos una suite completa de pruebas unitarias y funcionales utilizando el framework PHPUnit integrado en Laravel 11. Estas pruebas están ubicadas en la carpeta \texttt{tests/Feature/}.
+
+\subsection{Casos de Prueba Cubiertos}
+\begin{itemize}
+    \item \textbf{Seguridad y Accesos:} Validación de que los visitantes no autenticados y los usuarios clientes tengan el acceso prohibido (código 403 o redirección) a las rutas administrativas de listado de pedidos, edición de productos y lista de usuarios.
+    \item \textbf{Catálogo:} Carga del catálogo, detalle individual de producto y abortar con código 404 ante solicitudes de artículos inactivos o inexistentes.
+    \item \textbf{Carrito y Pedidos:} Pruebas de inserción y eliminación de productos en el carrito, compra exitosa de items, descuento del stock, y validación de error ante intentos de compra sin stock suficiente.
+    \item \textbf{Cancelación en Administración:} Test funcional que comprueba que cuando el administrador marca un pedido como `cancelado`, el stock de cada producto se reabastece de forma automática en la cantidad correspondiente, y valida que ejecuciones sucesivas del mismo cambio de estado no dupliquen la reposición.
+\end{itemize}
+
+\subsection{Comando de Ejecución y Resultados}
+La suite completa se ejecuta en el contenedor de desarrollo con el siguiente comando:
+\begin{lstlisting}[language=bash]
+docker compose exec -u sail laravel.test php artisan test
+\end{lstlisting}
+Todos los \textbf{49 tests pasaron de manera exitosa} (128 assertions, 0 errores), confirmando la solidez de la lógica de programación del backend.
+
+\section{Pruebas Manuales y Registro de Resultados}
+Para validar la interfaz de usuario y la experiencia de punta a punta, ejecutamos una verificación manual exhaustiva en navegador cubriendo los principales casos de prueba de aceptación de negocio.
+
+\subsection{Tabla de Registro de Casos de Prueba}
+\begin{table}[h!]
+\centering
+\caption{Registro de Casos de Prueba Manuales}
+\label{tab:pruebas_manuales}
+\begin{tabular}{lp{5cm}p{4cm}c}
+\toprule
+\textbf{ID} & \textbf{Caso de Prueba} & \textbf{Resultado Esperado} & \textbf{Estado} \\
+\midrule
+CP-01 & Registro de nuevo cliente & Usuario creado e inicio de sesión automático & Cumple \\
+CP-02 & Intrusión a rutas admin & Bloqueo de acceso con respuesta 403/Forbidden & Cumple \\
+CP-03 & Filtrado de catálogo & Visualización de ropa por categoría & Cumple \\
+CP-04 & Búsqueda de productos & Coincidencia del buscador por palabra clave & Cumple \\
+CP-05 & Persistencia carrito sesión & Carrito no se vacía al cerrar el navegador & Cumple \\
+CP-06 & Sincronización del carrito & Fusión de items de sesión a BD tras login & Cumple \\
+CP-07 & Proceso de compra completo & Creación física del pedido y descuento stock & Cumple \\
+CP-08 & Compra sin stock suficiente & Bloqueo de pago y aviso de advertencia flash & Cumple \\
+CP-09 & CRUD productos admin & Creación y edición exitosa con validación & Cumple \\
+CP-10 & Desactivación de producto & Producto ocultado del catálogo público & Cumple \\
+CP-11 & Cancelar pedido admin & Pedido cancelado y stock de ropa devuelto & Cumple \\
+CP-12 & Diseño responsive & Ajuste correcto de layouts a pantallas móviles & Cumple \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Todos los casos de prueba manuales arrojaron resultados satisfactorios, asegurando la conformidad visual y operativa de la tienda.

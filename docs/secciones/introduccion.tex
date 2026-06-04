@@ -1,0 +1,25 @@
+\chapter{Introducción}
+
+\section{Presentación del Proyecto}
+El proyecto final denominado \textbf{BLÜK} consiste en el diseño, desarrollo e implementación de una plataforma de comercio electrónico (e-commerce) orientada a la comercialización de ropa urbana y moda de estilo \textit{streetwear}, skater y surfer. El objetivo de este proyecto es digitalizar la marca y dotarla de un canal de venta online completamente autónomo y funcional disponible las 24 horas del día.
+
+\section{Justificación}
+La elección de un sistema de comercio electrónico para el proyecto de fin de ciclo de Desarrollo de Aplicaciones Web (DAW) responde a la necesidad de poner en práctica las competencias profesionales adquiridas a lo largo de las asignaturas formativas:
+\begin{itemize}
+    \item \textbf{Programación Web Servidor:} Implementación de lógica de negocio robusta, control de accesos, validaciones y bases de datos relacionales con Laravel 11.
+    \item \textbf{Desarrollo Web Cliente:} Maquetación estructurada, responsive y componentes interactivos dinámicos con Blade y Alpine.js.
+    \item \textbf{Despliegue de Aplicaciones:} Entornos contenerizados portables mediante Docker y orquestación con Docker Compose.
+\end{itemize}
+
+\section{Objetivos del Proyecto}
+
+\subsection{Objetivo General}
+Diseñar y desarrollar una aplicación web funcional de e-commerce que cubra de manera integral tanto los requisitos del cliente final (navegación, carrito de compras, gestión de perfiles y confirmación de pedidos) como las tareas de control interno de la tienda (gestión de almacén, productos, stock y control global de pedidos) bajo una infraestructura de virtualización robusta y portable.
+
+\subsection{Objetivos Específicos}
+\begin{itemize}
+    \item \textbf{Seguridad:} Cifrado de contraseñas mediante algoritmos seguros (bcrypt), protección contra intrusiones Cross-Site Request Forgery (CSRF) y control estricto de roles.
+    \item \textbf{Gestión de Stock Eficiente:} Prevenir inconsistencias de inventario en compras concurrentes y cancelaciones.
+    \item \textbf{Persistencia Híbrida del Carrito:} Conservar los productos agregados en sesión para visitantes anónimos y sincronizarlos con la base de datos tras la autenticación.
+    \item \textbf{Despliegue Portable:} Dockerización del proyecto utilizando una red interna con IPs fijas.
+\end{itemize}

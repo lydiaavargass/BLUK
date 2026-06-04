@@ -1,0 +1,50 @@
+\chapter{Desarrollo de los Módulos de la Aplicación}
+
+\section{Autenticación, Registro y Roles}
+El andamiaje de seguridad de usuarios se implementó con \textbf{Laravel Breeze}. Personalizamos el flujo inicial para adaptarlo a un sistema con roles diferenciados:
+\begin{itemize}
+    \item \textbf{Redirección Post-Login:} En \texttt{AuthenticatedSessionController}, reescribimos el método de inicio de sesión para comprobar el rol del usuario autenticado. Si tiene rol de administrador, es redirigido inmediatamente a la vista \texttt{/admin/productos}. Si es un usuario cliente, se le redirige al panel general \texttt{/dashboard} o a la tienda.
+    \item \textbf{AdminMiddleware:} Middleware creado para interceptar las peticiones HTTP dirigidas al panel de control. Realiza una validación lógica:
+\begin{lstlisting}[language=PHP]
+public function handle(Request $request, Closure $next)
+{
+    if (auth()->check() && auth()->user()->role->name === 'admin') {
+        return $next($request);
+    }
+    abort(403, 'Acceso no autorizado.');
+}
+\end{lstlisting}
+\end{itemize}
+
+\section{Catálogo Público y Ficha de Productos}
+El catálogo de productos (\texttt{ProductController@index}) proporciona herramientas para la exploración del stock de moda urbana:
+\begin{itemize}
+    \item \textbf{Buscador Simple:} Filtra los productos comparando el término del cliente con el nombre usando sentencias SQL \texttt{LIKE}.
+    \item \textbf{Ordenamiento:} Permite ordenar los productos de forma dinámica por precio de menor a mayor o viceversa.
+    \item \textbf{Filtro por Categorías:} Lógica Eloquent que recupera solo los productos que pertenecen a la relación de la categoría seleccionada.
+\end{itemize}
+
+\section{Carrito de Compras Híbrido}
+Implementamos un sistema dinámico gestionado por \texttt{CartController}:
+\begin{itemize}
+    \item \textbf{Invitados (Sesión):} Los productos agregados por usuarios sin loguear se guardan en un array dentro de la sesión del servidor.
+    \item \textbf{Usuarios Registrados (BD):} Los productos se insertan en las tablas \texttt{carts} y \texttt{cart\_items} para garantizar la persistencia del carrito desde cualquier dispositivo.
+    \item \textbf{Sincronización al Login:} Registramos un escuchador de eventos de autenticación que recupera los items temporales del carrito de la sesión y los vuelca en la base de datos bajo la cuenta del usuario autenticado.
+\end{itemize}
+
+\section{Transacciones de Pedidos y Checkout}
+El proceso de compra en \texttt{OrderController@store} exige máxima fiabilidad:
+\begin{enumerate}
+    \item \textbf{Validación de Stock Limite:} Antes de proceder al checkout, el sistema valida que las cantidades solicitadas de cada item estén disponibles en la tabla de productos.
+    \item \textbf{Transacciones de Base de Datos:} Toda la lógica de creación de orden, guardado de líneas de pedido y reducción del stock del almacén se ejecuta dentro de un bloque \texttt{DB::transaction} para prevenir condiciones de carrera concurrentes.
+    \item \textbf{Precio Histórico:} Registramos en la tabla \texttt{order\_items} el precio real unitario de compra del artículo en ese momento, aislando la facturación de futuras subidas de precios en el catálogo.
+\end{enumerate}
+
+\section{Panel de Administración}
+El panel de administración se diseñó para dar autonomía completa de gestión:
+\begin{itemize}
+    \item \textbf{CRUD de Productos:} Formularios completos protegidos con validación (`StoreProductRequest`) y almacenamiento de imágenes subidas en el disco del servidor.
+    \item \textbf{Desactivación Lógica:} Los productos no se eliminan físicamente (lo que rompería la integridad de compras históricas), sino que se desactivan marcando \texttt{is\_active = false}.
+    \item \textbf{Visualización de Usuarios:} Tabla con el listado de cuentas registradas con sus respectivos roles del sistema.
+    \item \textbf{Gestión de Estados y Reposición de Stock:} El administrador puede consultar los pedidos globales y cambiar su estado. Al cambiar el estado de un pedido pendiente a `cancelado`, se dispara una transacción SQL para retornar la cantidad de productos comprados al stock general de la tienda.
+\end{itemize}

@@ -1,0 +1,53 @@
+\chapter{Despliegue y Dockerización en Producción}
+
+\section{Diseño del Entorno Productivo}
+Para el despliegue en un entorno de producción o servidor VPS, el proyecto de fin de ciclo implementa una arquitectura contenerizada independiente de las herramientas de desarrollo local (Sail). Esta arquitectura separa responsabilidades utilizando tres servicios independientes comunicados a través de una red virtual privada bridge llamada \texttt{bluk\_net} con la subred \texttt{172.18.0.0/16}.
+
+\subsection{Esquema de Direccionamiento IP}
+Cumpliendo con la topología descrita en la memoria técnica, asignamos de manera estática y fija las direcciones IP internas de cada contenedor:
+\begin{itemize}
+    \item \textbf{Servidor Web Nginx} (\texttt{bluk\_prod\_nginx}): \texttt{172.18.0.2} (Puerto 80 interno, mapeado al puerto 8080 de la máquina host).
+    \item \textbf{Aplicación PHP-FPM} (\texttt{bluk\_prod\_app}): \texttt{172.18.0.3} (Puerto 9000).
+    \item \textbf{Base de Datos MySQL} (\texttt{bluk\_prod\_mysql}): \texttt{172.18.0.4} (Puerto 3306).
+\end{itemize}
+
+\section{Configuraciones Creadas}
+
+\subsection{Dockerfile de la Aplicación (\texttt{docker/app/Dockerfile})}
+El contenedor de la aplicación se construye con una imagen base oficial de \texttt{php:8.4-fpm}. Instala dependencias críticas del sistema y extensiones PHP (\texttt{pdo\_mysql}, \texttt{gd}, \texttt{zip}), copia a Composer de forma interna, y cambia recursivamente el propietario del código a \texttt{www-data} aplicando permisos de escritura \texttt{775} a las carpetas \texttt{storage} y \texttt{bootstrap/cache}.
+
+\subsection{Configuración del Servidor Web Nginx (\texttt{docker/nginx/default.conf})}
+Nginx está configurado para servir directamente los archivos públicos del proyecto en la carpeta \texttt{/var/www/html/public}. Todas las solicitudes dirigidas a scripts de extensión \texttt{.php} se interceptan y redirigen por FastCGI al socket del contenedor de la aplicación en \texttt{172.18.0.3:9000}.
+
+\subsection{Orquestación con Docker Compose (\texttt{docker-compose.prod.yml})}
+Orquesta el levantamiento y construcción conjunta de los servicios, montando los directorios correspondientes, inyectando variables de entorno y levantando la red bridge con direccionamiento de red estático.
+
+\section{Instrucciones del Proceso de Despliegue}
+El proceso paso a paso para levantar la infraestructura de producción local o en servidor consta de los siguientes comandos:
+
+\begin{enumerate}
+    \item \textbf{Construir e iniciar los servicios en segundo plano:}
+    \begin{lstlisting}[language=bash]
+docker compose -f docker-compose.prod.yml up -d --build
+    \end{lstlisting}
+    \item \textbf{Instalar dependencias de producción de Composer:}
+    \begin{lstlisting}[language=bash]
+docker compose -f docker-compose.prod.yml exec app composer install --no-interaction --optimize-autoloader --no-dev
+    \end{lstlisting}
+    \item \textbf{Generar clave de encriptación de aplicación Laravel:}
+    \begin{lstlisting}[language=bash]
+docker compose -f docker-compose.prod.yml exec app php artisan key:generate
+    \end{lstlisting}
+    \item \textbf{Ejecutar migraciones y semilla de base de datos:}
+    \begin{lstlisting}[language=bash]
+docker compose -f docker-compose.prod.yml exec app php artisan migrate --seed --force
+    \end{lstlisting}
+    \item \textbf{Optimizar el rendimiento en producción mediante caché de archivos:}
+    \begin{lstlisting}[language=bash]
+docker compose -f docker-compose.prod.yml exec app php artisan config:cache
+docker compose -f docker-compose.prod.yml exec app php artisan route:cache
+docker compose -f docker-compose.prod.yml exec app php artisan view:cache
+    \end{lstlisting}
+\end{enumerate}
+
+La aplicación queda expuesta y completamente funcional a través de la dirección web del host: \textbf{http://localhost:8080}.
