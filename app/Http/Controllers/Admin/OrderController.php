@@ -49,6 +49,10 @@ class OrderController extends Controller
             return redirect()->back()->with('info', 'El pedido ya tiene ese estado.');
         }
 
+        if ($oldStatus === 'cancelado' || $oldStatus === 'enviado') {
+            return redirect()->back()->with('error', 'No se puede modificar el estado de un pedido que ya está cancelado o enviado.');
+        }
+
         DB::beginTransaction();
         try {
             if ($newStatus === 'cancelado' && $oldStatus !== 'cancelado') {

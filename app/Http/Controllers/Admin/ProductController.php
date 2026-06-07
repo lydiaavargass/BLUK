@@ -80,6 +80,9 @@ class ProductController extends Controller
 
         // Reemplazar imagen si se sube una nueva
         if ($request->hasFile('image')) {
+            if ($producto->image) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($producto->image);
+            }
             $data['image'] = $request->file('image')->store('products', 'public');
         }
 

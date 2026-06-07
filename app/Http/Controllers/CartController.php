@@ -2,28 +2,42 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cart;
 use App\Models\Product;
+use App\Services\CartService;
+use Exception;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class CartController extends Controller
 {
+    protected CartService $cartService;
+
+    /**
+     * Inyecta la capa de servicio para el carrito.
+     */
+    public function __construct(CartService $cartService)
+    {
+        $this->cartService = $cartService;
+    }
+
     /**
      * Muestra el contenido del carrito.
      */
-    public function index()
+    public function index(): View
     {
-        if (auth()->check()) {
-            return $this->indexAuthenticated();
-        }
+        $cartData = $this->cartService->getCartData();
 
-        return $this->indexGuest();
+        return view('cart.index', [
+            'products' => $cartData['products'],
+            'total' => $cartData['total'],
+        ]);
     }
 
     /**
      * Añade un producto al carrito.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $request->validate([
             'product_id' => 'required|exists:products,id',
@@ -32,21 +46,20 @@ class CartController extends Controller
 
         $product = Product::findOrFail($request->product_id);
 
-        if (! $product->is_active) {
-            return back()->with('error', 'Este producto no está disponible.');
-        }
+        try {
+            $this->cartService->store($product, $request->quantity);
 
-        if (auth()->check()) {
-            return $this->storeAuthenticated($product, $request->quantity);
+            return redirect()->route('cart.index')
+                ->with('success', 'Producto añadido al carrito.');
+        } catch (Exception $e) {
+            return back()->with('error', $e->getMessage());
         }
-
-        return $this->storeGuest($product, $request->quantity);
     }
 
     /**
      * Actualiza la cantidad de un producto en el carrito.
      */
-    public function update(Request $request, int $productId)
+    public function update(Request $request, int $productId): RedirectResponse
     {
         $request->validate([
             'quantity' => 'required|integer|min:1',
@@ -54,171 +67,21 @@ class CartController extends Controller
 
         $product = Product::findOrFail($productId);
 
-        if ($request->quantity > $product->stock) {
-            return back()->with('error', 'No hay suficiente stock disponible.');
-        }
+        try {
+            $this->cartService->update($product, $request->quantity);
 
-        if (auth()->check()) {
-            return $this->updateAuthenticated($product, $request->quantity);
+            return back()->with('success', 'Cantidad actualizada.');
+        } catch (Exception $e) {
+            return back()->with('error', $e->getMessage());
         }
-
-        return $this->updateGuest($product->id, $request->quantity);
     }
 
     /**
      * Elimina un producto del carrito.
      */
-    public function destroy(int $productId)
+    public function destroy(int $productId): RedirectResponse
     {
-        if (auth()->check()) {
-            return $this->destroyAuthenticated($productId);
-        }
-
-        return $this->destroyGuest($productId);
-    }
-
-    // -------------------------------------------------------
-    // Métodos para invitado (sesión)
-    // -------------------------------------------------------
-
-    private function indexGuest()
-    {
-        $cart = session()->get('cart', []);
-        $products = [];
-        $total = 0;
-
-        foreach ($cart as $productId => $item) {
-            $product = Product::find($productId);
-            if ($product) {
-                $subtotal = $product->price * $item['quantity'];
-                $products[] = [
-                    'product' => $product,
-                    'quantity' => $item['quantity'],
-                    'subtotal' => $subtotal,
-                ];
-                $total += $subtotal;
-            }
-        }
-
-        return view('cart.index', compact('products', 'total'));
-    }
-
-    private function storeGuest(Product $product, int $quantity)
-    {
-        $cart = session()->get('cart', []);
-        $productId = $product->id;
-
-        $currentQty = $cart[$productId]['quantity'] ?? 0;
-        $newQty = $currentQty + $quantity;
-
-        if ($newQty > $product->stock) {
-            return back()->with('error', 'No hay suficiente stock disponible.');
-        }
-
-        $cart[$productId] = ['quantity' => $newQty];
-        session()->put('cart', $cart);
-
-        return redirect()->route('cart.index')
-            ->with('success', 'Producto añadido al carrito.');
-    }
-
-    private function updateGuest(int $productId, int $quantity)
-    {
-        $cart = session()->get('cart', []);
-
-        if (isset($cart[$productId])) {
-            $cart[$productId]['quantity'] = $quantity;
-            session()->put('cart', $cart);
-        }
-
-        return back()->with('success', 'Cantidad actualizada.');
-    }
-
-    private function destroyGuest(int $productId)
-    {
-        $cart = session()->get('cart', []);
-
-        if (isset($cart[$productId])) {
-            unset($cart[$productId]);
-            session()->put('cart', $cart);
-        }
-
-        return back()->with('success', 'Producto eliminado del carrito.');
-    }
-
-    // -------------------------------------------------------
-    // Métodos para usuario autenticado (BD)
-    // -------------------------------------------------------
-
-    private function indexAuthenticated()
-    {
-        $cart = Cart::firstOrCreate(['user_id' => auth()->id()]);
-        $items = $cart->items()->with('product')->get();
-
-        $products = [];
-        $total = 0;
-
-        foreach ($items as $item) {
-            if ($item->product) {
-                $subtotal = $item->product->price * $item->quantity;
-                $products[] = [
-                    'product' => $item->product,
-                    'quantity' => $item->quantity,
-                    'subtotal' => $subtotal,
-                ];
-                $total += $subtotal;
-            }
-        }
-
-        return view('cart.index', compact('products', 'total'));
-    }
-
-    private function storeAuthenticated(Product $product, int $quantity)
-    {
-        $cart = Cart::firstOrCreate(['user_id' => auth()->id()]);
-        $cartItem = $cart->items()->where('product_id', $product->id)->first();
-
-        $currentQty = $cartItem ? $cartItem->quantity : 0;
-        $newQty = $currentQty + $quantity;
-
-        if ($newQty > $product->stock) {
-            return back()->with('error', 'No hay suficiente stock disponible.');
-        }
-
-        if ($cartItem) {
-            $cartItem->update(['quantity' => $newQty]);
-        } else {
-            $cart->items()->create([
-                'product_id' => $product->id,
-                'quantity' => $quantity,
-            ]);
-        }
-
-        return redirect()->route('cart.index')
-            ->with('success', 'Producto añadido al carrito.');
-    }
-
-    private function updateAuthenticated(Product $product, int $quantity)
-    {
-        $cart = Cart::where('user_id', auth()->id())->first();
-
-        if ($cart) {
-            $cartItem = $cart->items()->where('product_id', $product->id)->first();
-            if ($cartItem) {
-                $cartItem->update(['quantity' => $quantity]);
-            }
-        }
-
-        return back()->with('success', 'Cantidad actualizada.');
-    }
-
-    private function destroyAuthenticated(int $productId)
-    {
-        $cart = Cart::where('user_id', auth()->id())->first();
-
-        if ($cart) {
-            $cart->items()->where('product_id', $productId)->delete();
-        }
+        $this->cartService->destroy($productId);
 
         return back()->with('success', 'Producto eliminado del carrito.');
     }

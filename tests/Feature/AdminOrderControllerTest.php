@@ -196,4 +196,45 @@ class AdminOrderControllerTest extends TestCase
         $product->refresh();
         $this->assertEquals($initialStock, $product->stock); // Sigue igual
     }
+
+    public function test_admin_cannot_transition_from_terminal_states(): void
+    {
+        $adminRole = Role::where('name', 'admin')->first();
+        $admin = User::factory()->create([
+            'role_id' => $adminRole->id,
+        ]);
+
+        $clienteRole = Role::where('name', 'cliente')->first();
+        $user = User::factory()->create([
+            'role_id' => $clienteRole->id,
+        ]);
+
+        // 1. Intentar cambiar desde estado cancelado
+        $cancelledOrder = Order::create([
+            'user_id' => $user->id,
+            'status' => 'cancelado',
+            'total' => 50.00,
+        ]);
+
+        $response1 = $this->actingAs($admin)->patch(route('admin.orders.update', $cancelledOrder), [
+            'status' => 'procesando',
+        ]);
+
+        $response1->assertSessionHas('error');
+        $this->assertEquals('cancelado', $cancelledOrder->refresh()->status);
+
+        // 2. Intentar cambiar desde estado enviado
+        $shippedOrder = Order::create([
+            'user_id' => $user->id,
+            'status' => 'enviado',
+            'total' => 50.00,
+        ]);
+
+        $response2 = $this->actingAs($admin)->patch(route('admin.orders.update', $shippedOrder), [
+            'status' => 'pendiente',
+        ]);
+
+        $response2->assertSessionHas('error');
+        $this->assertEquals('enviado', $shippedOrder->refresh()->status);
+    }
 }

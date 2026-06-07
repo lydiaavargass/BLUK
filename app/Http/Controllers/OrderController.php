@@ -2,20 +2,32 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cart;
 use App\Models\Order;
 use App\Models\Product;
+use App\Services\CartService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 
 class OrderController extends Controller
 {
+    protected CartService $cartService;
+
+    /**
+     * Inyecta la capa de servicio para el carrito.
+     */
+    public function __construct(CartService $cartService)
+    {
+        $this->cartService = $cartService;
+    }
+
     /**
      * Muestra el resumen del carrito antes de confirmar el pedido (checkout).
      */
     public function checkout()
     {
-        $cartData = $this->getCartData();
+        $cartData = $this->cartService->getCartData();
 
         if (empty($cartData['products'])) {
             return redirect()->route('cart.index')
@@ -33,7 +45,7 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        $cartData = $this->getCartData();
+        $cartData = $this->cartService->getCartData();
 
         if (empty($cartData['products'])) {
             return redirect()->route('cart.index')
@@ -76,7 +88,7 @@ class OrderController extends Controller
             }
 
             // 4. Vaciar el carrito
-            $this->clearCart();
+            $this->cartService->clear();
 
             DB::commit();
 
@@ -93,7 +105,7 @@ class OrderController extends Controller
     /**
      * Historial de pedidos del usuario autenticado.
      */
-    public function index()
+    public function index(): View
     {
         $orders = auth()->user()->orders()
             ->orderByDesc('created_at')
@@ -115,49 +127,5 @@ class OrderController extends Controller
         $order->load('items.product');
 
         return view('orders.show', compact('order'));
-    }
-
-    // -------------------------------------------------------
-    // Métodos privados auxiliares
-    // -------------------------------------------------------
-
-    /**
-     * Obtiene los datos del carrito (productos y total) del usuario autenticado.
-     */
-    private function getCartData(): array
-    {
-        $cart = Cart::where('user_id', auth()->id())->first();
-        $products = [];
-        $total = 0;
-
-        if ($cart) {
-            $items = $cart->items()->with('product')->get();
-
-            foreach ($items as $item) {
-                if ($item->product && $item->product->is_active) {
-                    $subtotal = $item->product->price * $item->quantity;
-                    $products[] = [
-                        'product' => $item->product,
-                        'quantity' => $item->quantity,
-                        'subtotal' => $subtotal,
-                    ];
-                    $total += $subtotal;
-                }
-            }
-        }
-
-        return compact('products', 'total');
-    }
-
-    /**
-     * Vacía el carrito del usuario autenticado.
-     */
-    private function clearCart(): void
-    {
-        $cart = Cart::where('user_id', auth()->id())->first();
-
-        if ($cart) {
-            $cart->items()->delete();
-        }
     }
 }
