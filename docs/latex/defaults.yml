@@ -1,0 +1,12 @@
+from: markdown
+metadata-file: metadata.yml
+template: template.tex
+pdf-engine: xelatex
+toc: true
+number-sections: true
+highlight-style: tango
+filters:
+  - filters/headers.lua
+  - filters/tables.lua
+  - filters/figures.lua
+  - filters/pagebreaks.lua

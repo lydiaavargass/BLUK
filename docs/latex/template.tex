@@ -1,0 +1,484 @@
+% ============================================================
+%  BLUK — Plantilla LaTeX (Pandoc)
+%  Estilo: FOC Documentation
+%  Motor: XeLaTeX
+% ============================================================
+
+% %%────────────────────────────────────────────────────
+% %% CLASE BASE
+% %%────────────────────────────────────────────────────
+\documentclass[
+  $if(fontsize)$$fontsize$,$endif$
+  $if(papersize)$$papersize$paper,$endif$
+  twoside=false,
+  parskip=half
+]{scrreprt}
+
+
+% %%────────────────────────────────────────────────────
+% %% PAQUETES FUNDAMENTALES
+% %%────────────────────────────────────────────────────
+\usepackage{calc}
+\usepackage{needspace}
+
+
+% %%────────────────────────────────────────────────────
+% %% TIPOGRAFÍA Y IDIOMA
+% %%────────────────────────────────────────────────────
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage[variant=spanish]{spanish}
+\frenchspacing
+\defaultfontfeatures{Ligatures=TeX}
+
+\newcommand{\focrequirefont}[3]{%
+  \IfFontExistsTF{#2}{%
+    #1[#3]{#2}%
+  }{%
+    \focfontmissing{#2}%
+  }%
+}
+
+\newcommand{\focrequirefontfamily}[3]{%
+  \IfFontExistsTF{#2}{%
+    \newfontfamily#1[#3]{#2}%
+  }{%
+    \focfontmissing{#2}%
+  }%
+}
+
+\newcommand{\focfontmissing}[1]{%
+  \PackageError{BLUK}{Fuente requerida no encontrada: #1}{%
+    Instalá esa fuente en el sistema o indicá una fuente disponible en el metadata del documento.}%
+}
+
+\newcommand{\foccovercentertext}[2]{%
+  \node[anchor=center, inner sep=0pt, yshift=#1] at (current page.center) {#2};%
+}
+
+\newcommand{\foccovernorthwesttext}[3]{%
+  \node[anchor=north west, inner sep=0pt, xshift=#1, yshift=#2] at (current page.north west) {#3};%
+}
+
+\newcommand{\foccovernortheasttext}[3]{%
+  \node[anchor=north east, inner sep=0pt, xshift=#1, yshift=#2] at (current page.north east) {#3};%
+}
+
+\newcommand{\foccoverellipse}[7]{%
+  \fill[#1, opacity=#2] ([xshift=#3, yshift=#4] #5) ellipse (#6 and #7);%
+}
+
+$if(mainfont)$
+  \focrequirefont{\setmainfont}{$mainfont$}{Numbers=OldStyle}
+$else$
+  \setmainfont[Numbers=OldStyle]{TeX Gyre Pagella}
+$endif$
+
+$if(sansfont)$
+  \focrequirefont{\setsansfont}{$sansfont$}{Scale=MatchLowercase}
+$else$
+  \setsansfont[Scale=MatchLowercase]{TeX Gyre Heros}
+$endif$
+
+$if(monofont)$
+  \focrequirefont{\setmonofont}{$monofont$}{Scale=MatchLowercase}
+$else$
+  \setmonofont[Scale=MatchLowercase]{TeX Gyre Cursor}
+$endif$
+
+\IfFontExistsTF{Maple Mono NF}{%
+  \newfontfamily\foccodeblockfont[Scale=MatchLowercase]{Maple Mono NF}%
+}{%
+  $if(codeblockfontpath)$
+    \IfFileExists{$codeblockfontpath$MapleMono-NF-Regular.ttf}{%
+      \newfontfamily\foccodeblockfont[Scale=MatchLowercase,Path=$codeblockfontpath$,UprightFont=MapleMono-NF-Regular.ttf]{Maple Mono NF}%
+    }{%
+      \focfontmissing{Maple Mono NF}%
+    }%
+  $else$
+    \focfontmissing{Maple Mono NF}%
+  $endif$
+}%
+
+
+% %%────────────────────────────────────────────────────
+% %% GEOMETRÍA Y COLORES
+% %%────────────────────────────────────────────────────
+\usepackage[$for(geometry)$$geometry$$sep$,$endfor$]{geometry}
+
+\usepackage{xcolor}
+% Colores institucionales FOC
+\definecolor{focblue}{HTML}{1F497D}
+\definecolor{focmid}{HTML}{1F497D}
+\definecolor{foclight}{HTML}{BDD7EE}
+\definecolor{focgray}{HTML}{595959}
+\definecolor{focorange}{HTML}{C97A00}
+% Colores One Dark para código
+\definecolor{foccodebg}{HTML}{282C34}
+\definecolor{foccodefg}{HTML}{ABB2BF}
+\definecolor{foccodecomment}{HTML}{5C6370}
+\definecolor{foccodekeyword}{HTML}{C678DD}
+\definecolor{foccodestring}{HTML}{98C379}
+\definecolor{foccodefunc}{HTML}{61AFEF}
+\definecolor{foccodetype}{HTML}{E5C07B}
+\definecolor{foccodeconst}{HTML}{D19A66}
+\definecolor{foccodeaccent}{HTML}{56B6C2}
+
+
+% %%────────────────────────────────────────────────────
+% %% INTERLINEADO Y MICROTIPOGRAFÍA
+% %%────────────────────────────────────────────────────
+\usepackage{setspace}
+$if(linestretch)$\setstretch{$linestretch$}$endif$
+\setlength{\emergencystretch}{2em}
+\clubpenalty=10000
+\widowpenalty=10000
+\displaywidowpenalty=10000
+
+\usepackage[final]{microtype}
+
+
+% %%────────────────────────────────────────────────────
+% %% TABLAS
+% %%────────────────────────────────────────────────────
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{colortbl}
+
+\definecolor{foctablerowodd}{HTML}{FFFFFF}
+\definecolor{foctableroweven}{HTML}{EAF2FC}
+\definecolor{foctableline}{HTML}{BFD0E3}
+
+\setlength{\heavyrulewidth}{0.09em}
+\setlength{\lightrulewidth}{0.05em}
+\setlength{\cmidrulewidth}{0.04em}
+\setlength{\aboverulesep}{0.6ex}
+\setlength{\belowrulesep}{0.5ex}
+\setlength{\extrarowheight}{1.5pt}
+\renewcommand{\arraystretch}{1.25}
+\setlength{\tabcolsep}{4.5pt}
+
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
+
+\definecolor{foctableheader}{HTML}{395D8D}
+
+\newcommand{\focapplytablestyle}{%
+  \arrayrulecolor{foctableline}%
+  \rowcolors{2}{foctableroweven}{foctablerowodd}%
+}
+
+\newcommand{\focresettablestyle}{%
+  \rowcolors{2}{}{}%
+  \arrayrulecolor{black}%
+}
+
+\AtBeginEnvironment{tabular}{\focapplytablestyle}%
+\AtEndEnvironment{tabular}{\focresettablestyle}%
+\AtBeginEnvironment{longtable}{\focapplytablestyle}%
+
+% Pandoc genera \def\LTcaptype{none} en tablas sin caption.
+% longtable no define ese contador; lo definimos vacío para evitar el error.
+\makeatletter
+\@ifundefined{c@none}{\newcounter{none}}{}
+\makeatother
+
+
+% %%────────────────────────────────────────────────────
+% %% LISTAS
+% %%────────────────────────────────────────────────────
+\usepackage{enumitem}
+\setlist[itemize,1]{label=\textcolor{focmid}{\textbullet}, leftmargin=1.8em, itemsep=0.2em}
+\setlist[itemize,2]{label=\textcolor{focmid}{--}, leftmargin=1.5em, itemsep=0.1em}
+\setlist[enumerate]{leftmargin=1.8em, itemsep=0.2em}
+
+
+% %%────────────────────────────────────────────────────
+% %% GRÁFICOS Y FIGURAS
+% %%────────────────────────────────────────────────────
+\usepackage{graphicx}
+\usepackage{caption}
+\captionsetup{
+  font=small,
+  labelfont={bf,color=focblue},
+  textfont=it,
+  labelsep=period,
+}
+
+
+% %%────────────────────────────────────────────────────
+% %% CÓDIGO FUENTE
+% %%────────────────────────────────────────────────────
+% Bloques Shaded de pandoc
+\usepackage[most]{tcolorbox}
+\definecolor{shadecolor}{HTML}{282C34}
+\newtcolorbox{Shaded}{%
+  enhanced,
+  breakable,
+  boxrule=0pt,
+  frame hidden,
+  colback=shadecolor,
+  arc=1.8mm,
+  left=5mm,
+  right=5mm,
+  top=3mm,
+  bottom=3mm,
+  boxsep=0pt,
+  before skip=0.8em,
+  after skip=0.8em,
+}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+
+% Macros de resaltado generadas por Pandoc
+\newcommand{\NormalTok}[1]{\textcolor{foccodefg}{#1}}
+\newcommand{\KeywordTok}[1]{\textcolor{foccodekeyword}{\bfseries #1}}
+\newcommand{\DataTypeTok}[1]{\textcolor{foccodetype}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor{foccodeconst}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor{foccodeconst}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor{foccodeconst}{#1}}
+\newcommand{\CharTok}[1]{\textcolor{foccodestring}{#1}}
+\newcommand{\StringTok}[1]{\textcolor{foccodestring}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor{foccodecomment}{\itshape #1}}
+\newcommand{\OtherTok}[1]{#1}
+\newcommand{\FunctionTok}[1]{\textcolor{foccodefunc}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor{foccodefg}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor{foccodekeyword}{\bfseries #1}}
+\newcommand{\OperatorTok}[1]{\textcolor{foccodeaccent}{#1}}
+\newcommand{\BuiltInTok}[1]{\textcolor{foccodefunc}{#1}}
+\newcommand{\ExtensionTok}[1]{\textcolor{foccodeaccent}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor{foccodecomment}{#1}}
+\newcommand{\AttributeTok}[1]{\textcolor{foccodetype}{#1}}
+\newcommand{\InformationTok}[1]{\textcolor{foccodeaccent}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor{focorange}{#1}}
+\newcommand{\AlertTok}[1]{\textcolor{red}{\bfseries #1}}
+\newcommand{\ErrorTok}[1]{\textcolor{red}{\bfseries #1}}
+\newcommand{\AnnotationTok}[1]{\textcolor{foccodecomment}{#1}}
+\newcommand{\CommentVarTok}[1]{\textcolor{foccodecomment}{\itshape #1}}
+\newcommand{\DocumentationTok}[1]{\textcolor{foccodecomment}{\itshape #1}}
+\newcommand{\ConstantTok}[1]{\textcolor{foccodeconst}{#1}}
+\newcommand{\RegionMarkerTok}[1]{\textcolor{foccodeaccent}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor{foccodeaccent}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor{foccodestring}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor{foccodestring}{#1}}
+\newcommand{\ImportTok}[1]{\textcolor{focblue}{#1}}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{
+  commandchars=\\\{\},
+  fontsize=\small,
+  formatcom=\foccodeblockfont,
+  baselinestretch=1.02,
+  xleftmargin=0pt,
+  xrightmargin=0pt,
+}
+
+
+% %%────────────────────────────────────────────────────
+% %% TIKZ (para portada)
+% %%────────────────────────────────────────────────────
+\usepackage{tikz}
+\usetikzlibrary{calc}
+
+
+% %%────────────────────────────────────────────────────
+% %% TÍTULOS DE SECCIÓN — KOMA-Script
+% %%────────────────────────────────────────────────────
+\usepackage{scrlayer-scrpage}
+
+\setkomafont{disposition}{\bfseries\sffamily}
+\setkomafont{chapter}{\Huge\bfseries\sffamily\color{focblue}}
+\setkomafont{section}{\Large\bfseries\sffamily\color{focmid}}
+\setkomafont{subsection}{\large\bfseries\sffamily\color{focmid}}
+\setkomafont{subsubsection}{\normalsize\bfseries\sffamily}
+
+\RedeclareSectionCommand[beforeskip=0.5em,afterskip=1.2em]{chapter}
+\RedeclareSectionCommand[beforeskip=1.2em,afterskip=0.65em]{section}
+\RedeclareSectionCommand[beforeskip=0.95em,afterskip=0.45em]{subsection}
+\RedeclareSectionCommand[beforeskip=0.8em,afterskip=0.35em]{subsubsection}
+
+% Índice (KOMA)
+\setkomafont{chapterentry}{\bfseries\sffamily\color{focblue}}
+\setkomafont{chapterentrypagenumber}{\bfseries\sffamily\color{focblue}}
+
+
+% %%────────────────────────────────────────────────────
+% %% ENCABEZADO Y PIE DE PÁGINA
+% %%────────────────────────────────────────────────────
+\clearpairofpagestyles
+\setlength{\headheight}{18pt}
+\newcommand{\focpagebrand}{\textcolor{focgray}{\sffamily $institution-brand$ \textregistered}}
+\newcommand{\focpagefooter}{\textcolor{focgray}{\sffamily Página~\thepage}}
+\newcommand{\focpageauthorfooter}{\small\color{focgray}\sffamily $if(footer-text)$$footer-text$$else$$for(author)$$author$$sep$ -- $endfor$$endif$}
+
+\ohead{\focpagebrand}
+\ohead*{\focpagebrand}
+\ihead{}
+\ihead*{}
+\ofoot{\focpagefooter}
+\ifoot{\focpageauthorfooter}
+\ofoot*{\focpagefooter}
+\ifoot*{\focpageauthorfooter}
+
+\KOMAoptions{headsepline=0.4pt}
+\addtokomafont{headsepline}{\color{focgray}}
+\pagestyle{scrheadings}
+\def\chapterpagestyle{scrheadings}
+
+
+% %%────────────────────────────────────────────────────
+% %% UTILIDADES PANDOC
+% %%─��──────────────────────────────────────────────────
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+
+% %%────────────────────────────────────────────────────
+% %% HYPERREF — SIEMPRE AL FINAL
+% %%────────────────────────────────────────────────────
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks  = $if(colorlinks)$$colorlinks$$else$true$endif$,
+  linkcolor   = $if(linkcolor)$$linkcolor$$else$focblue$endif$,
+  urlcolor    = $if(urlcolor)$$urlcolor$$else$focmid$endif$,
+  citecolor   = $if(citecolor)$$citecolor$$else$focmid$endif$,
+}
+\usepackage{bookmark}
+
+
+% %%────────────────────────────────────────────────────
+% %% PORTADA — TikZ (mejorada)
+% %%────────────────────────────────────────────────────
+\newcommand{\makefoccover}{%
+  \begin{titlepage}
+    \thispagestyle{empty}
+    \newgeometry{margin=0pt}
+
+    \begin{tikzpicture}[remember picture, overlay]
+      % ── Fondo blanco completo ──
+      \fill[white] (current page.south west) rectangle (current page.north east);
+
+      % ── Barra decorativa superior (azul institucional) ──
+      \fill[focblue]
+        (current page.north west) rectangle
+        ([yshift=-2.8cm] current page.north east);
+
+      % ── Marca institucional — logo + texto dentro de la barra azul ──
+      $if(logo-path)$
+      \foccovernorthwesttext{0.7cm}{-0.10cm}{\includegraphics[height=4.1cm]{$logo-path$}}
+
+      \foccovernortheasttext{-0.9cm}{-0.12cm}{\parbox[c][3.5cm][c]{9.3cm}{%
+        \raggedleft\color{white}\bfseries\sffamily\fontsize{15}{15}\selectfont \textbf{\uppercase{$institution-name$}}
+      }}
+      $else$
+      \foccovernortheasttext{-0.9cm}{-0.08cm}{\parbox[c][2.0cm][c]{14cm}{%
+        \raggedleft\color{white}\bfseries\sffamily\fontsize{15}{15}\selectfont \textbf{\uppercase{$institution-name$}}
+      }}
+      $endif$
+
+      % ── Línea divisoria sutil ──
+      \draw[focblue, line width=0.4pt]
+        ([yshift=-2.8cm] current page.north west) --
+        ([yshift=-2.8cm] current page.north east);
+
+      % ── Título "BLUK" — centrado, parte superior ──
+      \foccovercentertext{3.2cm}{\color{focblue}\fontsize{72}{74}\selectfont\bfseries\sffamily $title$}
+
+      % ── Subtítulo — debajo del título ──
+      \foccovercentertext{1.2cm}{\color{focmid}\fontsize{17}{20}\selectfont\sffamily $subtitle$}
+
+      % ── Línea horizontal decorativa ──
+      \draw[foclight, line width=1pt, opacity=0.85]
+        ([xshift=-4.0cm, yshift=-0.4cm] current page.center) --
+        ([xshift=4.0cm, yshift=-0.4cm] current page.center);
+
+      % ── Fase del proyecto ──
+      \foccovercentertext{-2.2cm}{\color{focblue}\bfseries\sffamily\fontsize{13}{15}\selectfont $if(phase)$$phase$$endif$}
+
+      % ── Autores ──
+      \foccovercentertext{-4.0cm}{\color{focgray}\sffamily\fontsize{12}{14}\selectfont $for(author)$$author$$sep$ ~~·~~ $endfor$}
+
+      % ── Decoración inferior — doble acento orgánico y premium ──
+      \fill[foclight, opacity=0.09]
+        (current page.south west) rectangle ([yshift=1.25cm] current page.south east);
+
+      % Esquina inferior izquierda
+      \foccoverellipse{focblue}{0.86}{-7.6cm}{-1.22cm}{current page.south west}{10.0cm}{5.9cm}
+      \foccoverellipse{focblue}{0.18}{-3.7cm}{1.18cm}{current page.south west}{6.4cm}{2.85cm}
+      \foccoverellipse{focblue}{0.22}{-4.4cm}{1.00cm}{current page.south west}{5.7cm}{2.60cm}
+      \foccoverellipse{focmid}{0.24}{-10.8cm}{-1.02cm}{current page.south west}{7.8cm}{4.15cm}
+      \foccoverellipse{foclight}{0.36}{-12.0cm}{-0.30cm}{current page.south west}{4.4cm}{2.35cm}
+      \foccoverellipse{foclight}{0.18}{-2.0cm}{0.54cm}{current page.south west}{3.1cm}{1.25cm}
+
+      % Esquina inferior derecha
+      \foccoverellipse{focblue}{0.86}{9.6cm}{-1.16cm}{current page.south east}{11.8cm}{6.7cm}
+      \foccoverellipse{focblue}{0.18}{4.4cm}{1.22cm}{current page.south east}{6.8cm}{3.00cm}
+      \foccoverellipse{focblue}{0.20}{4.9cm}{0.98cm}{current page.south east}{6.0cm}{2.70cm}
+      \foccoverellipse{focmid}{0.27}{12.6cm}{-0.96cm}{current page.south east}{8.4cm}{4.70cm}
+      \foccoverellipse{foclight}{0.42}{14.2cm}{-0.10cm}{current page.south east}{4.8cm}{2.55cm}
+      \foccoverellipse{foclight}{0.16}{2.8cm}{0.48cm}{current page.south east}{3.2cm}{1.25cm}
+
+    \end{tikzpicture}
+
+    \restoregeometry
+  \end{titlepage}
+}
+
+
+% %%────────────────────────────────────────────────────
+% %% PÁGINA LEGAL
+% %%────────────────────────────────────────────────────
+\newcommand{\makelegaldisclaimer}{%
+  \thispagestyle{empty}
+  \vspace*{\fill}
+  \begin{small}\itshape
+  Los documentos, elementos gráficos, vídeos, transparencias y otros recursos didácticos
+  incluidos en este contenido pueden contener imprecisiones técnicas o errores tipográficos.
+  Periódicamente se realizan cambios en el contenido. $legal-entity$ puede
+  realizar en cualquier momento, sin previo aviso, mejoras y/o cambios en el contenido.
+
+  \vspace{0.8em}
+  Es responsabilidad del usuario el cumplimiento de todas las leyes de derechos de autor
+  aplicables. Ningún elemento de este contenido, ni parte de este contenido puede ser
+  reproducida, almacenada o introducida en un sistema de recuperación, ni transmitida de
+  ninguna forma ni por ningún medio, sin la previa autorización por escrito de $legal-entity$.
+
+  \vspace{0.8em}
+  Este contenido está protegido por la ley de propiedad intelectual e industrial. Pertenecen
+  a $legal-entity$ los derechos de autor y los demás derechos de propiedad
+  intelectual e industrial sobre este contenido.
+
+  \vspace{0.8em}
+  Sin perjuicio de los casos en que la ley aplicable prohíbe la exclusión de la
+  responsabilidad por daños, $legal-entity$ no se responsabiliza en ningún
+  caso de daños indirectos que se deriven del uso de este contenido.
+
+  \vspace{0.8em}
+  \textcopyright{} $date$ $legal-entity$ todos los derechos reservados.
+  \end{small}
+  \vspace*{\fill}
+  \newpage
+}
+
+
+% %%────────────────────────────────────────────────────
+% %% INICIO DEL DOCUMENTO
+% %%────────────────────────────────────────────────────
+\begin{document}
+
+% Portada y página legal
+\makefoccover
+\makelegaldisclaimer
+
+% Índice
+{
+  \hypersetup{linkcolor=focblue}
+  \tableofcontents
+  \newpage
+}
+
+% Contenido generado por Pandoc
+$body$
+
+\end{document}

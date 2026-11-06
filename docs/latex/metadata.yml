@@ -1,0 +1,46 @@
+---
+title: "BLÜK"
+subtitle: "Tienda online"
+institution-name: "Centro Educativo FOC"
+institution-brand: "FOMENTO OCUPACIONAL FOC"
+legal-entity: "Fomento Ocupacional FOC SL"
+project-type: "Proyecto final DAW"
+cycle: "Desarrollo de Aplicaciones Web (DAW)"
+phase: "Memoria del Proyecto"
+author:
+  - "Xavier Morro Sanz"
+  - "Lidia Vargas"
+date: "2026"
+lang: es-ES
+
+# Pandoc PDF settings
+documentclass: scrreprt
+papersize: a4
+fontsize: 11pt
+linestretch: 1.15
+
+geometry:
+  - top=2.5cm
+  - bottom=2.5cm
+  - left=2.5cm
+  - right=2.5cm
+
+# Table of contents
+toc: true
+toc-depth: 3
+number-sections: true
+
+# Font (XeLaTeX)
+mainfont: "Times New Roman"
+sansfont: "Arial"
+monofont: "Consolas"
+
+# Hyperlinks
+colorlinks: true
+linkcolor: "focblue"
+urlcolor: "focblue"
+citecolor: "focblue"
+
+# Footer institucional/autores
+footer-text: "Xavier Morro Sanz -- Lidia Vargas | DAW"
+---
