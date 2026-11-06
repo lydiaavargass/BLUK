@@ -51,7 +51,7 @@
                         {{-- Usuario --}}
                         <div class="flex items-center gap-4">
                             @auth
-                                <a href="{{ route('dashboard') }}" class="text-sm font-medium text-gray-500 hover:text-gray-700">Mi Panel</a>
+                                <a href="{{ Auth::user()->isAdmin() ? route('admin.dashboard') : route('dashboard') }}" class="text-sm font-medium text-gray-500 hover:text-gray-700">Mi Panel</a>
                             @else
                                 <a href="{{ route('login') }}" class="text-sm font-medium text-gray-500 hover:text-gray-700">Login</a>
                                 @if (Route::has('register'))

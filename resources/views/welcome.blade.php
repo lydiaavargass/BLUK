@@ -51,9 +51,14 @@
                     <div class="group bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-1 transition duration-300 overflow-hidden flex flex-col justify-between transform">
                         <div>
                             {{-- Contenedor de Imagen o Fallback idéntico al catálogo --}}
-                            <div class="aspect-square bg-gray-50 overflow-hidden relative border-b border-gray-100">
+                            <a href="{{ route('products.show', $product) }}" class="block aspect-square bg-gray-50 overflow-hidden relative border-b border-gray-100">
                                 @if($product->image)
-                                    <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 ease-out">
+                                    @if($product->image_back)
+                                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-0">
+                                        <img src="{{ asset('storage/' . $product->image_back) }}" alt="{{ $product->name }}" class="w-full h-full object-cover absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                                    @else
+                                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 ease-out">
+                                    @endif
                                 @else
                                     <div class="w-full h-full flex flex-col items-center justify-center bg-gray-50 text-gray-400 select-none">
                                         <svg class="w-8 h-8 mb-2 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -62,7 +67,7 @@
                                         <span class="text-xs font-bold tracking-wider uppercase">Sin imagen</span>
                                     </div>
                                 @endif
-                            </div>
+                            </a>
                             <div class="p-6">
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded text-[10px] font-bold bg-teal-50 text-teal-700 uppercase tracking-wider mb-2">
                                     {{ $product->category->name ?? 'Producto' }}
@@ -109,9 +114,14 @@
                     <div class="group bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-1 transition duration-300 overflow-hidden flex flex-col justify-between transform">
                         <div>
                             {{-- Contenedor de Imagen o Fallback idéntico al catálogo --}}
-                            <div class="aspect-square bg-gray-50 overflow-hidden relative border-b border-gray-100">
+                            <a href="{{ route('products.show', $product) }}" class="block aspect-square bg-gray-50 overflow-hidden relative border-b border-gray-100">
                                 @if($product->image)
-                                    <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 ease-out">
+                                    @if($product->image_back)
+                                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-0">
+                                        <img src="{{ asset('storage/' . $product->image_back) }}" alt="{{ $product->name }}" class="w-full h-full object-cover absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                                    @else
+                                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 ease-out">
+                                    @endif
                                 @else
                                     <div class="w-full h-full flex flex-col items-center justify-center bg-gray-50 text-gray-400 select-none">
                                         <svg class="w-8 h-8 mb-2 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -120,7 +130,7 @@
                                         <span class="text-xs font-bold tracking-wider uppercase">Sin imagen</span>
                                     </div>
                                 @endif
-                            </div>
+                            </a>
                             <div class="p-6">
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded text-[10px] font-bold bg-teal-50 text-teal-700 uppercase tracking-wider mb-2">
                                     {{ $product->category->name ?? 'Producto' }}

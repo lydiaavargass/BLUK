@@ -26,11 +26,23 @@
 
         <div class="lg:grid lg:grid-cols-2 lg:gap-x-12">
             {{-- Imagen del producto --}}
-            <div class="bg-gray-100 rounded-lg overflow-hidden aspect-square">
-                @if($product->image)
-                    <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
-                @else
-                    <div class="w-full h-full flex items-center justify-center text-gray-400 italic">Imagen no disponible</div>
+            <div>
+                <div class="bg-gray-100 rounded-lg overflow-hidden aspect-square relative" id="main-image-container">
+                    @if($product->image)
+                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" id="main-image" class="w-full h-full object-cover">
+                    @else
+                        <div class="w-full h-full flex items-center justify-center text-gray-400 italic">Imagen no disponible</div>
+                    @endif
+                </div>
+                @if($product->image && $product->image_back)
+                    <div class="grid grid-cols-2 gap-4 mt-4">
+                        <button onclick="document.getElementById('main-image').src='{{ asset('storage/' . $product->image) }}'" class="border-2 border-indigo-600 hover:border-indigo-500 rounded-lg overflow-hidden aspect-square focus:outline-none transition">
+                            <img src="{{ asset('storage/' . $product->image) }}" class="w-full h-full object-cover">
+                        </button>
+                        <button onclick="document.getElementById('main-image').src='{{ asset('storage/' . $product->image_back) }}'" class="border border-gray-200 hover:border-indigo-500 rounded-lg overflow-hidden aspect-square focus:outline-none transition">
+                            <img src="{{ asset('storage/' . $product->image_back) }}" class="w-full h-full object-cover">
+                        </button>
+                    </div>
                 @endif
             </div>
 

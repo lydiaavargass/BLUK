@@ -81,7 +81,7 @@
                 @if ($product->image)
                     <div class="flex items-center gap-4">
                         <div class="w-20 h-20 rounded-lg border border-gray-200 overflow-hidden bg-gray-100">
-                            <img src="{{ asset($product->image) }}" alt="{{ $product->name }}" class="object-cover w-full h-full">
+                            <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="object-cover w-full h-full">
                         </div>
                         <p class="text-sm text-gray-500">Imagen actual. Sube una nueva para reemplazarla.</p>
                     </div>

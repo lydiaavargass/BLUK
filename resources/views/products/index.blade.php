@@ -62,14 +62,19 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
                     @forelse($products as $product)
-                        <div class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
-                            <div class="aspect-square bg-gray-100">
+                        <div class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden group">
+                            <a href="{{ route('products.show', $product) }}" class="block aspect-square bg-gray-100 relative overflow-hidden">
                                 @if($product->image)
-                                    <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
+                                    @if($product->image_back)
+                                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-0">
+                                        <img src="{{ asset('storage/' . $product->image_back) }}" alt="{{ $product->name }}" class="w-full h-full object-cover absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                                    @else
+                                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
+                                    @endif
                                 @else
                                     <div class="w-full h-full flex items-center justify-center text-gray-400 italic">Sin imagen</div>
                                 @endif
-                            </div>
+                            </a>
                             <div class="p-4">
                                 <span class="text-xs font-semibold text-indigo-600 uppercase">{{ $product->category->name ?? 'Producto' }}</span>
                                 <h3 class="text-lg font-bold text-gray-900 mt-1">{{ $product->name }}</h3>

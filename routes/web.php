@@ -20,6 +20,9 @@ Route::patch('/carrito/{productId}', [CartController::class, 'update'])->name('c
 Route::delete('/carrito/{productId}', [CartController::class, 'destroy'])->name('cart.destroy');
 
 Route::get('/dashboard', function () {
+    if (auth()->user()->isAdmin()) {
+        return redirect()->route('admin.dashboard');
+    }
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 

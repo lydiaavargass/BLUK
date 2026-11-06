@@ -15,28 +15,106 @@ class ProductSeeder extends Seeder
     {
         $products = [
             // Camisetas
-            ['category' => 'Camisetas', 'name' => 'Camiseta BLÜK Classic', 'description' => 'Camiseta de algodón 100% con logo BLÜK bordado. Corte regular, disponible en negro y blanco.', 'price' => 29.99, 'stock' => 50],
-            ['category' => 'Camisetas', 'name' => 'Camiseta Oversize Urban', 'description' => 'Corte oversize con estampado frontal urbano. Tejido premium de 220g.', 'price' => 34.99, 'stock' => 35],
-            ['category' => 'Camisetas', 'name' => 'Camiseta Minimal Stripe', 'description' => 'Diseño minimalista con rayas finas. Algodón orgánico certificado.', 'price' => 27.50, 'stock' => 40],
-
-            // Pantalones
-            ['category' => 'Pantalones', 'name' => 'Jogger BLÜK Street', 'description' => 'Jogger de felpa con puños elásticos y bolsillos laterales. Perfecto para el día a día.', 'price' => 44.99, 'stock' => 30],
-            ['category' => 'Pantalones', 'name' => 'Pantalón Cargo Wide', 'description' => 'Pantalón cargo de corte ancho con bolsillos utilitarios. Tejido resistente.', 'price' => 54.99, 'stock' => 25],
-            ['category' => 'Pantalones', 'name' => 'Vaquero Relaxed Fit', 'description' => 'Denim 100% algodón con lavado medio. Corte relajado y cómodo.', 'price' => 49.99, 'stock' => 20],
-
-            // Zapatillas
-            ['category' => 'Zapatillas', 'name' => 'BLÜK Runner V1', 'description' => 'Zapatilla deportiva con suela de goma EVA y upper de malla transpirable.', 'price' => 79.99, 'stock' => 15],
-            ['category' => 'Zapatillas', 'name' => 'Sneaker Platform', 'description' => 'Sneaker con plataforma de 4cm. Diseño limpio en piel sintética blanca.', 'price' => 89.99, 'stock' => 12],
+            [
+                'category' => 'Camisetas',
+                'name' => 'Camiseta BLÜK Classic',
+                'description' => 'Camiseta de algodón 100% con logo BLÜK bordado. Corte regular de alta durabilidad en color negro.',
+                'price' => 19.99,
+                'stock' => 50,
+                'image' => 'products/camiseta_basic_negra.jpeg'
+            ],
+            [
+                'category' => 'Camisetas',
+                'name' => 'Camiseta Basic Blanca',
+                'description' => 'Camiseta básica blanca confeccionada en algodón orgánico. Suave al tacto y corte clásico.',
+                'price' => 15.99,
+                'stock' => 50,
+                'image' => 'products/camiseta_basic_blanca.jpeg'
+            ],
+            [
+                'category' => 'Camisetas',
+                'name' => 'Camiseta Oversize Urban',
+                'description' => 'Corte oversize en color beige con estampado exclusivo Solar x BLÜK. Estilo urbano premium.',
+                'price' => 18.50,
+                'stock' => 50,
+                'image' => 'products/camiseta_beige_solarxbluk.jpeg'
+            ],
+            [
+                'category' => 'Camisetas',
+                'name' => 'Camiseta Beige Surf',
+                'description' => 'Camiseta color beige inspirada en el surf urbano. Algodón premium y corte regular fit, con estampado frontal y trasero.',
+                'price' => 17.99,
+                'stock' => 50,
+                'image' => 'products/camiseta_beige_surf_1.jpeg',
+                'image_back' => 'products/camiseta_beige_surf_2.jpeg'
+            ],
+            [
+                'category' => 'Camisetas',
+                'name' => 'Camiseta Azul Ballena',
+                'description' => 'Camiseta en color azul marino con ilustraciones originales de ballena en la parte frontal y trasera.',
+                'price' => 16.50,
+                'stock' => 50,
+                'image' => 'products/camiseta_azoscuro_ballena_1.jpeg',
+                'image_back' => 'products/camiseta_azoscuro_ballena_2.jpeg'
+            ],
 
             // Accesorios
-            ['category' => 'Accesorios', 'name' => 'Gorra BLÜK Logo', 'description' => 'Gorra de cinco paneles con logo bordado. Cierre ajustable trasero.', 'price' => 19.99, 'stock' => 60],
-            ['category' => 'Accesorios', 'name' => 'Mochila Urban Pack', 'description' => 'Mochila de 20L con compartimento para portátil hasta 15". Tejido impermeable.', 'price' => 59.99, 'stock' => 18],
-            ['category' => 'Accesorios', 'name' => 'Cinturón Nylon Táctico', 'description' => 'Cinturón de nylon con hebilla metálica. Largo ajustable hasta 120cm.', 'price' => 14.99, 'stock' => 45],
+            [
+                'category' => 'Accesorios',
+                'name' => 'Gorra BLÜK Logo',
+                'description' => 'Gorra ajustable de cinco paneles en color beige con el logo clásico de BLÜK bordado.',
+                'price' => 19.99,
+                'stock' => 50,
+                'image' => 'products/gorra_beige.jpeg',
+                'image_back' => null
+            ],
 
-            // Sudaderas
-            ['category' => 'Sudaderas', 'name' => 'Hoodie BLÜK Essential', 'description' => 'Sudadera con capucha y bolsillo canguro. Felpa interior de 320g.', 'price' => 54.99, 'stock' => 25],
-            ['category' => 'Sudaderas', 'name' => 'Sudadera Crewneck Minimal', 'description' => 'Sin capucha, cuello redondo, logo discreto en el pecho. Ideal para layering.', 'price' => 49.99, 'stock' => 30],
-            ['category' => 'Sudaderas', 'name' => 'Hoodie Zip Reflective', 'description' => 'Sudadera con cremallera completa y detalles reflectantes. Perfecta para salidas nocturnas.', 'price' => 64.99, 'stock' => 10],
+            // Bolsos
+            [
+                'category' => 'Bolsos',
+                'name' => 'Bolso Cerezas',
+                'description' => 'Bolso de tela resistente con un diseño divertido y colorido de cerezas. Ideal para playa o uso diario.',
+                'price' => 12.99,
+                'stock' => 50,
+                'image' => 'products/bolso_cerezas.jpeg',
+                'image_back' => null
+            ],
+            [
+                'category' => 'Bolsos',
+                'name' => 'Bolso Hippie',
+                'description' => 'Bolso con estilo bohemio y colores veraniegos. Amplio, cómodo y con cierre reforzado.',
+                'price' => 13.50,
+                'stock' => 50,
+                'image' => 'products/bolso_hippie.jpeg',
+                'image_back' => null
+            ],
+            [
+                'category' => 'Bolsos',
+                'name' => 'Bolso Langosta',
+                'description' => 'Bolso temático marinero con estampado de langosta roja sobre fondo claro. Algodón grueso y duradero.',
+                'price' => 12.99,
+                'stock' => 50,
+                'image' => 'products/bolso_langosta.jpeg',
+                'image_back' => null
+            ],
+            [
+                'category' => 'Bolsos',
+                'name' => 'Bolso Sol',
+                'description' => 'Diseño radiante con un sol ilustrado. Perfecto para los días luminosos, lavable y ecológico.',
+                'price' => 10.99,
+                'stock' => 50,
+                'image' => 'products/bolso_sol.jpeg',
+                'image_back' => null
+            ],
+            [
+                'category' => 'Bolsos',
+                'name' => 'Bolso Tortuga',
+                'description' => 'Estampado de tortuga marina en tonos verdes. Confeccionado en loneta ecológica de alta calidad.',
+                'price' => 11.99,
+                'stock' => 50,
+                'image' => 'products/bolso_tortuga.jpeg',
+                'image_back' => null
+            ],
         ];
 
         foreach ($products as $item) {
@@ -50,6 +128,8 @@ class ProductSeeder extends Seeder
                         'description' => $item['description'],
                         'price' => $item['price'],
                         'stock' => $item['stock'],
+                        'image' => $item['image'],
+                        'image_back' => $item['image_back'] ?? null,
                         'is_active' => true,
                     ]
                 );

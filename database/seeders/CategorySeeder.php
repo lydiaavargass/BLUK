@@ -14,10 +14,8 @@ class CategorySeeder extends Seeder
     {
         $categories = [
             ['name' => 'Camisetas', 'description' => 'Camisetas de algodón y diseño urbano'],
-            ['name' => 'Pantalones', 'description' => 'Pantalones casual y streetwear'],
-            ['name' => 'Zapatillas', 'description' => 'Calzado deportivo y urbano'],
-            ['name' => 'Accesorios', 'description' => 'Gorras, mochilas, cinturones y más'],
-            ['name' => 'Sudaderas', 'description' => 'Sudaderas con y sin capucha'],
+            ['name' => 'Accesorios', 'description' => 'Gorras y complementos de estilo urbano'],
+            ['name' => 'Bolsos', 'description' => 'Bolsos exclusivos con diseños originales'],
         ];
 
         foreach ($categories as $category) {
