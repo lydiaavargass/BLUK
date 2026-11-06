@@ -36,11 +36,34 @@ La aplicación sigue el patrón Modelo Vista Controlador (MVC) propio de Laravel
 
 ## Puesta en marcha
 
+### Opción 1: Desarrollo local rápido (PHP 8.2+ y SQLite)
+
+Para clonar y poner a punto el proyecto en cualquier máquina en un solo comando:
+
 ```bash
-docker compose up -d
-docker compose exec laravel.test php artisan migrate
-docker compose exec laravel.test npm install
+composer install
+composer setup
+npm install && npm run build
+php artisan serve
 ```
+
+> **¿Qué hace `composer setup`?** Copia `.env.example` a `.env`, genera la `APP_KEY`, crea la base de datos SQLite local, ejecuta todas las migraciones con sus seeders (productos, usuarios, categorías) y crea el enlace simbólico de almacenamiento (`storage:link`).
+
+Acceder a: `http://localhost:8000`
+
+### Opción 2: Entorno contenerizado con Docker
+
+Consulta la guía detallada de arquitectura de red y despliegue en [`DEPLOYMENT.md`](DEPLOYMENT.md).
+
+```bash
+docker compose -f docker-compose.prod.yml up -d --build
+docker compose -f docker-compose.prod.yml exec app composer install --no-dev
+docker compose -f docker-compose.prod.yml exec app php artisan key:generate
+docker compose -f docker-compose.prod.yml exec app php artisan migrate --seed --force
+docker compose -f docker-compose.prod.yml exec app php artisan storage:link
+```
+
+Acceder a: `http://localhost:8080`
 
 ## Usuarios de prueba
 
