@@ -99,6 +99,12 @@ Una vez que los contenedores estén activos, se deben ejecutar los comandos de c
    docker compose -f docker-compose.prod.yml exec app php artisan migrate --seed --force
    ```
 
+5. **Crear enlace simbólico de almacenamiento**:
+   Vincular el almacenamiento público para que las imágenes de los productos sean accesibles vía web:
+   ```bash
+   docker compose -f docker-compose.prod.yml exec app php artisan storage:link
+   ```
+
 ### Paso 3.4: Optimizaciones para Producción
 
 Para garantizar un rendimiento óptimo de la aplicación web en producción, habilitar el almacenamiento en caché de la configuración y rutas de Laravel:

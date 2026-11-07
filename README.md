@@ -38,9 +38,12 @@ La aplicación sigue el patrón Modelo Vista Controlador (MVC) propio de Laravel
 
 ### Opción 1: Desarrollo local rápido (PHP 8.2+ y SQLite)
 
-Para clonar y poner a punto el proyecto en cualquier máquina en un solo comando:
+Para clonar y poner a punto el proyecto en cualquier máquina:
 
 ```bash
+git clone https://github.com/lydiaavargass/BLUK.git
+cd BLUK
+
 composer install
 composer setup
 npm install && npm run build
